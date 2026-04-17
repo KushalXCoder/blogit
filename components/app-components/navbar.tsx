@@ -8,7 +8,7 @@ export const Navbar = () => {
         { name: "Thoughts", href: "/contact" },
     ];
     return (
-        <nav className="px-20 py-5 border-b border-dashed bg-white">
+        <nav className="sticky top-0 px-20 py-3 border-b border-dashed bg-white">
             <div className="flex justify-between items-center">
                 <h1 className="text-xl">Indoc</h1>
                 <div className="flex items-center gap-2">
