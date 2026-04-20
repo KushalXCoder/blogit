@@ -8,13 +8,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { login } from "@/controllers/auth.controller";
 import { LoginData } from "@/lib/types/global.types";
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export const Form = () => {
+    const router = useRouter();
+
     const [data, setData] = useState<LoginData>({
-        username: "",
         email: "",
         password: "",
     });
@@ -26,26 +30,25 @@ export const Form = () => {
         });
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(data);
-        // Store to backend
+
+        const { email, password } = data;
+        if(!email || !password) return;
+
+        // Handle login logic here
+        try {
+          await login(data);
+          toast("Login successful!");
+          router.push("/");
+        } catch (error) {
+          toast(error instanceof Error ? error.message : "Login failed. Please try again."); 
+        }
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="username">Username</FieldLabel>
-                <Input
-                  id="username"
-                  type="text"
-                  value={data.username}
-                  onChange={handleChange}
-                  placeholder="johndoe"
-                  required
-                />
-              </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
@@ -70,12 +73,12 @@ export const Form = () => {
                 <Input id="password" type="password" value={data.password} onChange={handleChange} required />
               </Field>
               <Field>
-                <Button type="submit">Sign Up</Button>
+                <Button type="submit">Login</Button>
                 <Button variant="outline" type="button">
-                  Sign Up with Google
+                  Login with Google
                 </Button>
                 <FieldDescription className="text-center">
-                    Already have an account? <Link href="/auth/login">Login</Link>
+                    Don't have an account? <Link href="/auth/signup">Sign Up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
