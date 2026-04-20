@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -9,9 +10,11 @@ export default function Home() {
           <h1 className="text-5xl text-center">Your docs, your AI, your team - together.</h1>
         </div>
         <div className="flex items-center gap-5">
-          <Button className="w-50 py-5">
-            Start Writing
-          </Button>
+          <Link href="/docs" className="cursor-pointer">
+            <Button className="w-50 py-5">
+              Start Writing
+            </Button>
+          </Link>
           <Button variant="outline" className="w-50 py-5">
             Learn More
           </Button>

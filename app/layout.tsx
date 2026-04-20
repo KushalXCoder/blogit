@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/app-components/navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
   subsets:['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-accent/20">
         <Navbar />
         {children}
+        <Toaster />
       </body>
     </html>
   );
