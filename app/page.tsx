@@ -1,3 +1,4 @@
+import { WaitlistDialog } from "@/components/app-components/waitlist/waitlist-dialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -15,17 +16,15 @@ export default function Home() {
               Start Writing
             </Button>
           </Link>
-          <Button variant="outline" className="w-50 py-5">
-            Learn More
-          </Button>
+          <WaitlistDialog />
         </div>
       </div>
       {/* <div className="w-full border border-dashed">
 
       </div> */}
       <div className="min-h-200 w-full border border-b-0 rounded-t-lg shadow-sm px-2 pt-2 bg-accent">
-        <div className="min-h-200 w-full bg-white rounded-t-sm shadow-sm">
-
+        <div className="min-h-200 w-full bg-white rounded-t-sm shadow-sm flex justify-center items-center">
+          <h1 className="text-xl text-gray-500">Demo coming soon....</h1>
         </div>
       </div>
       {/* Features */}
