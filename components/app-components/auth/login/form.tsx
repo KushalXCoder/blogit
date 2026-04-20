@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { login } from "@/controllers/auth.controller";
 import { LoginData } from "@/lib/types/global.types";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
