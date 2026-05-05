@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { checkToken } from "./lib/checkToken";
 
@@ -13,7 +12,7 @@ export const proxy = async (req: NextRequest) => {
     }
 
     // Allow the requested page
-    return NextResponse.redirect(new URL('/', req.url));
+    return NextResponse.next();
 }
 
 export const config = {
