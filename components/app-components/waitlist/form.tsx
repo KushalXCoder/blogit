@@ -77,7 +77,7 @@ export const WaitlistForm = () => {
               </Field>
               <div className="flex items-start gap-3 group">
                 <Checkbox className="mt-1" checked={data.receiveUpdates} onCheckedChange={handleChecked} />
-                <p className="text-gray-500 group-hover:text-black/80 transition-colors">Check this box to receive updates and announcements about Indoc.</p>
+                <p className="text-gray-500 group-hover:text-black/80 transition-colors">Check this box to receive updates and announcements about blogit.</p>
               </div>
               <Button type="submit">
                 Join Waitlist

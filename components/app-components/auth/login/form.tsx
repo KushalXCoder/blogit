@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { login } from "@/controllers/auth.controller";
-import { LoginData } from "@/lib/types/global.types";
+import { LoginData } from "@/lib/types/auth.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
