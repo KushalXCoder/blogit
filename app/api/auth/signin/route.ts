@@ -34,7 +34,7 @@ export const POST = async (req: NextRequest) => {
 
         // Set the token in an HTTP-only cookie
         const res = NextResponse.json({ message: "User created successfully" }, { status: 201 });
-        res.cookies.set("indoc-token", token, {
+        res.cookies.set("blogit-token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",

@@ -1,6 +1,6 @@
 // All the auth related frontend API calls to interact with the backend
 
-import { LoginData, SignUpData } from "@/lib/types/global.types";
+import { LoginData, SignUpData } from "@/lib/types/auth.types";
 
 // Sigin function
 export const signin = async (data: SignUpData) => {

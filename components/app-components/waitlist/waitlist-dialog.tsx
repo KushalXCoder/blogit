@@ -21,12 +21,12 @@ export const WaitlistDialog = async () => {
                     <DialogTitle>Thanks for joining the waitlist!</DialogTitle>
                     {!isUserInWaitlist && (
                         <DialogDescription>
-                            Please enter the details below and we'll notify you when we're ready to launch. We appreciate your interest and can't wait to share Indoc with you!
+                            Please enter the details below and we'll notify you when we're ready to launch. We appreciate your interest and can't wait to share blogit with you!
                         </DialogDescription>
                     )}
                 </DialogHeader>
                 {isUserInWaitlist ? (
-                    <div className="text-blue-500">You are already on the waitlist! Please wait for our notification. Thanks for choosing Indoc!</div>
+                    <div className="text-blue-500">You are already on the waitlist! Please wait for our notification. Thanks for choosing blogit!</div>
                 ) : (
                     <WaitlistForm />
                 )}
