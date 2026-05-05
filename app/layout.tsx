@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Indoc - Collaborative Document Editor",
+  title: "blogit - Collaborative Document Editor",
   description: "A collaborative document editor with the capabilities of RAG and AI.",
 };
 
@@ -36,7 +36,6 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", dmSans.variable)}
     >
       <body className="min-h-full flex flex-col bg-accent/20">
-        <Navbar />
         {children}
         <Toaster />
       </body>
