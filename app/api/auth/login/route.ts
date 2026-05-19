@@ -1,5 +1,6 @@
 import { checkPassword } from "@/lib/checkPassoword";
 import { connectDb } from "@/lib/drivers/db";
+import { signToken } from "@/lib/signToken";
 import { User } from "@/models/user.model";
 import { NextResponse } from "next/server";
 
@@ -27,7 +28,11 @@ export const POST = async (req: NextResponse) => {
         }
 
         // Create a token
-        const token = JSON.stringify({ username: user.username, email: user.email });
+        const token = signToken({
+            username: user.username,
+            email: user.email,
+            connection: user.connection
+        });
 
         // Set the token in an HTTP-only cookie
         const res = NextResponse.json({ message: "Login successful" }, { status: 200 });

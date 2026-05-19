@@ -11,10 +11,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
+        trim: true,
     },
     password: {
         type: String,
         required: true,
+    },
+    connection: {
+        devto: {
+            type: Boolean,
+            default: false,
+        },
+        hashnode: {
+            type: Boolean,
+            default: false,
+        },
     }
 });
 

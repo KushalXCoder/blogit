@@ -1,6 +1,8 @@
-import { getIntegrationData } from "@/lib/integrationData";
+import { checkToken } from "@/lib/checkToken";
 import { signToken } from "@/lib/signToken";
 import { NextRequest, NextResponse } from "next/server";
+import { connectDb } from "@/lib/drivers/db";
+import { User } from "@/models/user.model";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -22,21 +24,38 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ message: "Invalid Key" }, { status: 400 });
         }
 
-        // Get the existing user integration data, update it, and sign it
-        const integrationData = await getIntegrationData();
-        const updatedIntegrationData = {
-            ...integrationData,
-            devtoVerification: true,
-        };
-        const token = signToken(updatedIntegrationData, "365d");
+        await connectDb();
 
+        // Get the existing user integration data, update it, and sign it
+        const userData = await checkToken();
+        if(!userData) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
+        const user = await User.findOne({ email: userData.email });
+        if(!user) {
+            return NextResponse.json({ message: "User not found" }, { status: 404 });
+        }
+
+        user.connection = {
+            ...user.connection,
+            devto: true,
+        };
+
+        await user.save();
+
+        const token = signToken({
+            email: user.email,
+            username: user.username,
+            connection: user.connection,
+        });
         const response = NextResponse.json({ message: "Verification successful", data }, { status: 200 });
 
-        response.cookies.set("integration-token", token, {
+        response.cookies.set("blogit-token", token, {
             httpOnly: true,
             sameSite: "strict",
             secure: true,
-            maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         });
 
         return response;

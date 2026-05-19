@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { verifyDevtoKey } from '@/controllers/setting.controller';
 import { IntegrationData } from '@/lib/types/global.types';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 type AccountIntegrationsProps = {
     integrationsData: IntegrationData;
@@ -20,9 +21,12 @@ export const AccountIntegrations = ({
 }: AccountIntegrationsProps) => {
     const { devtoKey, hashnodeKey, updateSettings } = settingsStore();
 
+    const [devkeyVerified, setDevKeyVerified] = useState<boolean>(false);
+    const [hashnodeKeyVerified, setHashnodeKeyVerified] = useState<boolean>(false);
+
     const handleDevVerify = async () => {
         // If already verified, do nothing
-        if(integrationsData.devtoVerification) return;
+        if(integrationsData.devto) return;
         
         // Check if field is empty
         if(!devtoKey) {
@@ -34,6 +38,7 @@ export const AccountIntegrations = ({
             const res = await verifyDevtoKey(devtoKey);
             if(res) {
                 toast.success("Dev.to key verified successfully!");
+                setDevKeyVerified(true);
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to verify Dev.to key. Please check your input and try again.";
@@ -60,7 +65,7 @@ export const AccountIntegrations = ({
                                 onChange={(e) => updateSettings({ devtoKey: e.target.value })}
                                 placeholder='https://dev.to/summarecon'
                                 className='h-9'
-                                disabled={integrationsData.devtoVerification}
+                                disabled={integrationsData.devto}
                             />
                         </div>
                         <Button
@@ -68,10 +73,10 @@ export const AccountIntegrations = ({
                             variant="outline"
                             className={cn(
                                 'h-9 min-w-25',
-                                integrationsData.devtoVerification && "bg-green-500 cursor-not-allowed hover:bg-green-500"
+                                devkeyVerified || integrationsData.devto && "bg-green-500 cursor-not-allowed hover:bg-green-500"
                             )}
                         >
-                            {integrationsData.devtoVerification ? "Verified" : "Verify"}
+                            {devkeyVerified || integrationsData.devto ? "Verified" : "Verify"}
                         </Button>
                     </div>
                     <div className='space-y-2 min-w-100'>
@@ -86,7 +91,7 @@ export const AccountIntegrations = ({
                                 id='hashnodekey'
                                 value={hashnodeKey}
                                 onChange={(e) => updateSettings({ hashnodeKey: e.target.value })}
-                                placeholder='https://dev.to/summarecon'
+                                placeholder='https://hashnode.com/summarecon'
                                 className='h-9'
                             />
                         </div>
@@ -94,10 +99,10 @@ export const AccountIntegrations = ({
                             variant="outline"
                             className={cn(
                                 'h-9 min-w-25',
-                                integrationsData.hashnodeVerification && "bg-green-500"
+                                hashnodeKeyVerified && "bg-green-500"
                             )}
                         >
-                            {integrationsData.hashnodeVerification ? "Verified" : "Verify"}
+                            {hashnodeKeyVerified || integrationsData.hashnode ? "Verified" : "Verify"}
                         </Button>
                     </div>
                 </div>

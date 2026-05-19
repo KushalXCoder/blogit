@@ -56,9 +56,9 @@ export const PersonalSettings = ({
                 <div className="grid grid-cols-2 gap-4">
                     {/* First Name */}
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="firstName" className="text-sm font-medium">First name</Label>
+                        <Label htmlFor="username" className="text-sm font-medium">Username</Label>
                         <Input
-                            id="firstName"
+                            id="username"
                             value={username}
                             onChange={(e) => updateSettings({ username: e.target.value })}
                             placeholder="Summarecon"
