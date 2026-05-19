@@ -5,6 +5,12 @@ export type WaitlistData = {
 };
 
 export type IntegrationData = {
-    devtoVerification: boolean;
-    hashnodeVerification: boolean;
+    devto: boolean;
+    hashnode: boolean;
+}
+
+export type TokenData = {
+    username: string;
+    email: string;
+    connection: IntegrationData;
 }
