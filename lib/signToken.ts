@@ -11,8 +11,10 @@ export const signToken = (
     payload: any,
     expiresIn: string = "7d"
 ) => {
+    // Remove exp from payload if it exists, as we will set it in the options
+    const { exp, ...rest } = payload;
     const token = jwt.sign(
-        payload,
+        rest,
         JWT_SECRET,
         { expiresIn } as jwt.SignOptions,
     );

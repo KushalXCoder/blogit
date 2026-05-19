@@ -2,6 +2,7 @@ import { connectDb } from "@/lib/drivers/db";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { signToken } from "@/lib/signToken";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -27,10 +28,17 @@ export const POST = async (req: NextRequest) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Creating the user in the database
-        const user = await User.create({ username, email, password: hashedPassword });
+        await User.create({ username, email, password: hashedPassword });
 
         // Create a token
-        const token = JSON.stringify({ username: user.username, email: user.email });
+        const token = signToken({ 
+            username, 
+            email,
+            connection: {
+                devto: false,
+                hashnode: false
+            }
+        });
 
         // Set the token in an HTTP-only cookie
         const res = NextResponse.json({ message: "User created successfully" }, { status: 201 });
