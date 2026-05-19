@@ -15,7 +15,7 @@ export default function Home() {
             <p className="mt-5 text-xl max-w-xl text-gray-500">Connect seamless with dev.to and hashnode, to help posting and tracking analysis.</p>
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/docs" className="cursor-pointer">
+            <Link href="/dashboard" className="cursor-pointer">
               <Button className="w-50 py-5">
                 Start Writing
               </Button>
