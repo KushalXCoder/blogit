@@ -26,7 +26,7 @@ export const AppSidebar = () => {
   ];
 
   const handleClick = () => {
-    router.push("/document/new");
+    router.push("/blog");
   }
 
   return (

@@ -2,11 +2,18 @@ import { checkToken } from "@/lib/checkToken";
 import { PersonalSettings } from "@/components/app-components/settings/personal-settings";
 import { Profile } from "@/components/app-components/settings/profile";
 import { AccountIntegrations } from "@/components/app-components/settings/integrations";
-import { getIntegrationData } from "@/lib/integrationData";
 
 const Settings = async () => {
     const user = await checkToken();
-    const integrationsData = await getIntegrationData();
+    // const integrationsData = await getIntegrationData();
+
+    if(!user) {
+        return (
+            <div className="flex-1 flex items-center justify-center">
+                <p className="text-gray-500 text-lg">Unauthorized. Please log in to access settings.</p>
+            </div>
+        )
+    }
 
     return (
         <div className="relative min-h-full flex-1 flex flex-col justify-center items-center px-10 py-4">
@@ -16,7 +23,7 @@ const Settings = async () => {
             <div className="space-y-6 z-10">
                 <Profile />
                 <PersonalSettings user={user} />
-                <AccountIntegrations integrationsData={integrationsData} />
+                <AccountIntegrations integrationsData={user.connection} />
             </div>
         </div>
     );
