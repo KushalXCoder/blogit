@@ -1,5 +1,8 @@
 // Controller for settings related API calls
 
+import { upload } from "@imagekit/next";
+import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError } from "@imagekit/next";
+
 export const verifyDevtoKey = async (devtoKey: string) => {
     const res = await fetch('/api/verify/devto', {
         method: 'POST',
@@ -15,4 +18,59 @@ export const verifyDevtoKey = async (devtoKey: string) => {
     }
 
     return data;
+}
+
+export const authenticator = async () => {
+    const res = await fetch("/api/upload/auth");
+
+    let data;
+    try {
+        data = await res.json();
+    } catch (error : any) {
+        throw new Error("Unexpected server response");
+    }
+
+    if(!res.ok){
+        throw new Error(data.message || "Authentication failed");
+    }
+
+    const { signature, expire, token, publicKey } = data;
+    return { signature, expire, token, publicKey };
+};
+
+// Update Image
+export const updateImage = async (file: File) => {
+    try {
+        const { signature, expire, token, publicKey } = await authenticator();
+
+        const uploadResponse = await upload({
+            expire,
+            token,
+            signature,
+            publicKey,
+            file,
+            fileName: file.name,
+        });
+    
+        if(!uploadResponse || !uploadResponse.url) {
+            throw new Error("Image upload failed");
+        }
+    
+        return uploadResponse;
+    } catch (error) {
+        if (error instanceof ImageKitAbortError) {
+            console.error("Upload aborted:", error.reason);
+        } else if (error instanceof ImageKitInvalidRequestError) {
+            console.error("Invalid request:", error.message);
+        } else if (error instanceof ImageKitUploadNetworkError) {
+            console.error("Network error:", error.message);
+        } else if (error instanceof ImageKitServerError) {
+            console.error("Server error:", error.message);
+        } else {
+            // Handle any other errors that may occur.
+            console.error("Upload error:", error);
+        }
+
+        throw error;
+    }
 }
