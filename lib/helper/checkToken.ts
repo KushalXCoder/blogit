@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { TokenData } from "./types/global.types";
+import { TokenData } from "../types/global.types";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
