@@ -1,5 +1,5 @@
-import { checkToken } from "@/lib/checkToken";
-import { signToken } from "@/lib/signToken";
+import { checkToken } from "@/lib/helper/checkToken";
+import { signToken } from "@/lib/helper/signToken";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDb } from "@/lib/drivers/db";
 import { User } from "@/models/user.model";

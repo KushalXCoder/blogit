@@ -1,6 +1,6 @@
-import { checkPassword } from "@/lib/checkPassoword";
+import { checkPassword } from "@/lib/helper/checkPassoword";
 import { connectDb } from "@/lib/drivers/db";
-import { signToken } from "@/lib/signToken";
+import { signToken } from "@/lib/helper/signToken";
 import { User } from "@/models/user.model";
 import { NextResponse } from "next/server";
 

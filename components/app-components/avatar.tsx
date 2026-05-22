@@ -1,4 +1,4 @@
-import { checkToken } from "@/lib/checkToken";
+import { checkToken } from "@/lib/helper/checkToken";
 
 export const Avatar = async () => {
     const token = await checkToken();

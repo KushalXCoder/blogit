@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { WaitlistForm } from "./form";
-import { checkWaitlist } from "@/lib/checkWaitlist";
+import { checkWaitlist } from "@/lib/helper/checkWaitlist";
 
 export const WaitlistDialog = async () => {
     const isUserInWaitlist = await checkWaitlist();

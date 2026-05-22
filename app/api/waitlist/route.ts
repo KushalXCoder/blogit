@@ -2,7 +2,7 @@ import { connectDb } from "@/lib/drivers/db";
 import { Waitlist } from "@/models/waitlist.model";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { signToken } from "@/lib/signToken";
+import { signToken } from "@/lib/helper/signToken";
 
 export const POST = async (req: NextRequest) => {
     try {

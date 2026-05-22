@@ -1,4 +1,4 @@
-import { checkToken } from "@/lib/checkToken";
+import { checkToken } from "@/lib/helper/checkToken";
 import { PersonalSettings } from "@/components/app-components/settings/personal-settings";
 import { Profile } from "@/components/app-components/settings/profile";
 import { AccountIntegrations } from "@/components/app-components/settings/integrations";
