@@ -3,6 +3,7 @@ import { create } from 'zustand';
 type SettingsStore = {
     username: string;
     email: string;
+    hasImageSelected: boolean;
     profileImage: string;
     devtoKey: string;
     hashnodeKey: string;
@@ -13,7 +14,8 @@ type SettingsStore = {
 export const settingsStore = create<SettingsStore>((set) => ({
     username: '',
     email: '',
-    profileImage: '/avatars/profile.jpg',
+    hasImageSelected: false,
+    profileImage: '',
     devtoKey: '',
     hashnodeKey: '',
     updateSettings: (settings) => set((state) => ({ ...state, ...settings })),
