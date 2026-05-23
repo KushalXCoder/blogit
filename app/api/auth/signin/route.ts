@@ -2,7 +2,7 @@ import { connectDb } from "@/lib/drivers/db";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { signToken } from "@/lib/signToken";
+import { signToken } from "@/lib/helper/signToken";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -34,7 +34,7 @@ export const POST = async (req: NextRequest) => {
         const token = signToken({ 
             username, 
             email,
-            connection: {
+            connections: {
                 devto: false,
                 hashnode: false
             }

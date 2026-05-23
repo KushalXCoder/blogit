@@ -4,16 +4,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { TokenData } from '@/lib/types/user.types';
 import { toast } from 'sonner';
 import { settingsStore } from '@/store/setting.store';
+import { TokenData } from '@/lib/types/global.types';
+
+type PersonalSettingsProps = {
+    user : Partial<TokenData>;
+}
 
 export const PersonalSettings = ({
     user
-}: TokenData) => {
+} : PersonalSettingsProps) => {
     let { username, email, updateSettings } = settingsStore();
-    username = username || user.username;
-    email = email || user.email;
+    
+    user.username = username || user.username;
+    user.email = email || user.email;
 
     // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     const file = e.target.files?.[0];

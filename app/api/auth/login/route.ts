@@ -1,6 +1,6 @@
-import { checkPassword } from "@/lib/checkPassoword";
+import { checkPassword } from "@/lib/helper/checkPassoword";
 import { connectDb } from "@/lib/drivers/db";
-import { signToken } from "@/lib/signToken";
+import { signToken } from "@/lib/helper/signToken";
 import { User } from "@/models/user.model";
 import { NextResponse } from "next/server";
 
@@ -31,7 +31,8 @@ export const POST = async (req: NextResponse) => {
         const token = signToken({
             username: user.username,
             email: user.email,
-            connection: user.connection
+            image: user.image,
+            connections: user.connections
         });
 
         // Set the token in an HTTP-only cookie

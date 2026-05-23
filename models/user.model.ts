@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    connection: {
+    image: {
+        type: String,
+        default: "",
+    },
+    connections: {
         devto: {
             type: Boolean,
             default: false,

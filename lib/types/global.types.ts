@@ -1,3 +1,5 @@
+import { UserData } from "./user.types";
+
 export type WaitlistData = {
     name: string;
     email: string;
@@ -9,8 +11,4 @@ export type IntegrationData = {
     hashnode: boolean;
 }
 
-export type TokenData = {
-    username: string;
-    email: string;
-    connection: IntegrationData;
-}
+export type TokenData = UserData;
