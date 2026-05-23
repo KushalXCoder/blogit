@@ -1,16 +1,18 @@
+// This file contains types related to the user and their settings
+
+import { IntegrationData } from "./global.types";
+
 export type UserSettings = {
     username: string;
     email: string;
-    profileImage: string;
+    image: string;
     devtoKey?: string;
     hashnodeKey?: string;
 };
 
-export type TokenData = {
-    user: User;
-};
-
-export type User = {
-    username: string;
+export type UserData = {
     email: string;
+    username: string;
+    image: string;
+    connections: IntegrationData;
 }
