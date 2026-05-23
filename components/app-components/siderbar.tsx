@@ -10,11 +10,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { DocFreeIcons, Folder01FreeIcons, GitGraph, Graph, Plus, Settings, Star } from "@hugeicons/core-free-icons";
 import { Icon } from "./icon-renderer";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export const AppSidebar = () => {
   const router = useRouter();
@@ -30,11 +32,18 @@ export const AppSidebar = () => {
   }
 
   return (
-    <Sidebar className="sticky h-full px-2 py-1 border-dashed">
-      <SidebarHeader className="">
+    <Sidebar className="sticky h-full px-2 py-3 border-dashed">
+      <SidebarHeader className="flex justify-between space-y-2">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-3 items-center">
+            <Image src="/logo.svg" alt="Logo" height={1000} width={1000} priority draggable={false} className="size-8" />
+            <h1 className="text-xl">Blogit</h1>
+          </div>
+          <SidebarTrigger />
+        </div>
         <Button onClick={handleClick} className="w-full border-gray-300 border-dashed bg-transparent hover:bg-accent text-black transition-colors">
           <Icon icon={Plus} />
-          New Document
+          New Blog
         </Button>
       </SidebarHeader>
       <SidebarContent>
