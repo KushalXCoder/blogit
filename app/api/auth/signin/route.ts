@@ -34,7 +34,7 @@ export const POST = async (req: NextRequest) => {
         const token = signToken({ 
             username, 
             email,
-            connection: {
+            connections: {
                 devto: false,
                 hashnode: false
             }

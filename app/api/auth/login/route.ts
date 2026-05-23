@@ -31,7 +31,8 @@ export const POST = async (req: NextResponse) => {
         const token = signToken({
             username: user.username,
             email: user.email,
-            connection: user.connection
+            image: user.image,
+            connections: user.connections
         });
 
         // Set the token in an HTTP-only cookie
