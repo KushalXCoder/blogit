@@ -12,7 +12,7 @@ const DocsLayout = ({
     return (
         <SidebarProvider>
             <div className="w-full flex flex-col bg-white">
-                <DocsNavbar />
+                {/* <DocsNavbar /> */}
                 <main className="flex-1 flex h-full">
                     <AppSidebar />
                     {children}
