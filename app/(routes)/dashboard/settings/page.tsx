@@ -5,8 +5,6 @@ import { AccountIntegrations } from "@/components/app-components/settings/integr
 
 const Settings = async () => {
     const user = await checkToken();
-    // const integrationsData = await getIntegrationData();
-
     if(!user) {
         return (
             <div className="flex-1 flex items-center justify-center">
@@ -21,9 +19,9 @@ const Settings = async () => {
             <div className="absolute inset-0 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px] z-0" />
             {/* Settings */}
             <div className="space-y-6 z-10">
-                <Profile />
+                <Profile userImage={user.image} />
                 <PersonalSettings user={user} />
-                <AccountIntegrations integrationsData={user.connection} />
+                <AccountIntegrations integrationsData={user.connections} />
             </div>
         </div>
     );
