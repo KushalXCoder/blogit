@@ -6,15 +6,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { settingsStore } from '@/store/setting.store';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload } from "@imagekit/next";
 import { updateImage } from '@/controllers/setting.controller';
-import { totalmem } from 'os';
+import { updateUser } from '@/controllers/user.controller';
+import { UserData } from '@/lib/types/user.types';
+import { Image } from '@imagekit/next';
 
-export const Profile = () => {
-    const { profileImage, hasImageSelected, updateSettings } = settingsStore();
+type ProfileProps = {
+    userImage: UserData["image"];
+};
+
+export const Profile = ({
+    userImage,
+} : ProfileProps) => {
+    let { image, hasImageSelected, updateSettings } = settingsStore();
 
     const [uploading, setUploading] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    
+    image = image || userImage;
 
     // Handle local image view 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +31,7 @@ export const Profile = () => {
 
         if(file) {
             const localUrl = URL.createObjectURL(file);
-            updateSettings({ profileImage: localUrl, hasImageSelected: true });
+            updateSettings({ image: localUrl, hasImageSelected: true });
             toast.success('Profile image added locally');
         } else {
             toast.error('Failed to upload image. Please try again.');
@@ -31,7 +40,7 @@ export const Profile = () => {
 
     // Open image before uploading, using a blob local url
     const handleImageOpen = () => {
-        window.open(profileImage, '_blank');    
+        window.open(image, '_blank');    
     }
 
     // Handle updation of image
@@ -47,11 +56,25 @@ export const Profile = () => {
         const file = fileInput.files[0];
 
         try {
+            // Upload the image to imagekit
             const res = await updateImage(file);
-
             console.log("Upload successful:", res);
+
             toast.success('Profile image updated successfully');
-            
+
+            // Create the updates object
+            const updates = {
+                image: res.url,
+            };
+
+            try {
+                await updateUser(updates);
+            } catch (error) {
+                const msg = error instanceof Error ? error.message : 'Failed to update user details. Please try again.';
+                console.error("Error updating user details:", msg);
+                toast.error(msg);
+            }
+
             updateSettings({ hasImageSelected: false });
         } catch (error) {
             if (error instanceof Error) {
@@ -61,6 +84,8 @@ export const Profile = () => {
             }
         }
     }
+
+    console.log(image);
 
     return (
         <Card className='shadow'>
@@ -75,7 +100,7 @@ export const Profile = () => {
                         onClick={handleImageOpen}
                     >
                         <AvatarImage
-                            src={profileImage}
+                            src={image}
                             alt="Profile"
                         />
                         <AvatarFallback>SE</AvatarFallback>

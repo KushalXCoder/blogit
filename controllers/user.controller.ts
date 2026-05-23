@@ -1,6 +1,8 @@
 // All the user related frontend API calls to interact with the backend
 
+import { ApiResponse } from "@/lib/types/api.types";
 import { WaitlistData } from "@/lib/types/global.types";
+import { UserData } from "@/lib/types/user.types";
 
 export const addUserToWaitlist = async (data: WaitlistData) => {
     try {
@@ -27,4 +29,21 @@ export const addUserToWaitlist = async (data: WaitlistData) => {
         console.log("Error adding user to waitlist:", error);
         throw error;
     }
+}
+
+export const updateUser = async (updates: Partial<UserData>) => {
+    const res = await fetch("/api/user/update", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ updates }),
+    });
+
+    const data : ApiResponse<null> = await res.json();
+    if(!res.ok || data.error) {
+        throw new Error(data.error || data.message || "Failed to update user details");
+    }
+
+    return data;
 }

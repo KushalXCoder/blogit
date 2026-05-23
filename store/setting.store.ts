@@ -4,7 +4,7 @@ type SettingsStore = {
     username: string;
     email: string;
     hasImageSelected: boolean;
-    profileImage: string;
+    image: string;
     devtoKey: string;
     hashnodeKey: string;
 
@@ -15,7 +15,7 @@ export const settingsStore = create<SettingsStore>((set) => ({
     username: '',
     email: '',
     hasImageSelected: false,
-    profileImage: '',
+    image: '',
     devtoKey: '',
     hashnodeKey: '',
     updateSettings: (settings) => set((state) => ({ ...state, ...settings })),
