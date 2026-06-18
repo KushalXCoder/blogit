@@ -2,6 +2,8 @@
 
 import { upload } from "@imagekit/next";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError } from "@imagekit/next";
+import { ApiResponse } from "../lib/types/api.types";
+import { UserData } from "../lib/types/user.types";
 
 export const verifyDevtoKey = async (devtoKey: string) => {
     const res = await fetch('/api/verify/devto', {
@@ -12,12 +14,12 @@ export const verifyDevtoKey = async (devtoKey: string) => {
         body: JSON.stringify({ devtoKey }),
     });
 
-    const data = await res.json();
+    const data : ApiResponse<UserData> = await res.json();
     if(!res.ok) {
         throw new Error(data.message || "Verification failed");
     }
 
-    return data;
+    return data.data;
 }
 
 export const authenticator = async () => {
