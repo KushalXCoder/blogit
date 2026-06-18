@@ -7,7 +7,6 @@ import { User } from "@/src/models/user.model";
 export const POST = async (req: NextRequest) => {
     try {
         const { devtoKey } = await req.json();
-
         if(!devtoKey) {
             return NextResponse.json({ message: "Key is missing" }, { status: 400 });
         }
@@ -18,8 +17,7 @@ export const POST = async (req: NextRequest) => {
             },
         });
 
-        const data = await res.json();
-        
+        await res.json();
         if(!res.ok) {
             return NextResponse.json({ message: "Invalid Key" }, { status: 400 });
         }
@@ -37,19 +35,29 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
 
-        user.connection = {
-            ...user.connection,
+        user.connections = {
+            ...user.connections,
             devto: true,
         };
 
         await user.save();
 
-        const token = signToken({
+        const data = {
             email: user.email,
             username: user.username,
-            connection: user.connection,
-        });
-        const response = NextResponse.json({ message: "Verification successful", data }, { status: 200 });
+            image: user.image,
+            connections: {
+                devto: true,
+                hashnode: user.connections.hashnode,
+            },
+        };
+
+        const token = signToken(data);
+
+        const response = NextResponse.json({
+            message: "Verification successful",
+            data: data,
+        }, { status: 200 });
 
         response.cookies.set("blogit-token", token, {
             httpOnly: true,
