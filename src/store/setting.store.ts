@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 
 type SettingsStore = {
-    username: string;
-    email: string;
     hasImageSelected: boolean;
     image: string;
     devtoKey: string;
@@ -12,8 +10,6 @@ type SettingsStore = {
 }
 
 export const settingsStore = create<SettingsStore>((set) => ({
-    username: '',
-    email: '',
     hasImageSelected: false,
     image: '',
     devtoKey: '',
