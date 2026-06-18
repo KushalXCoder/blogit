@@ -9,7 +9,6 @@ import { toast } from 'sonner';
 import { updateImage } from '@/src/controllers/setting.controller';
 import { updateUser } from '@/src/controllers/user.controller';
 import { UserData } from '@/src/lib/types/user.types';
-import { Image } from '@imagekit/next';
 
 type ProfileProps = {
     userImage: UserData["image"];
