@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "./logo";
 
 export const Navbar = () => {
     const navLinks = [
@@ -10,7 +11,7 @@ export const Navbar = () => {
     return (
         <nav className="sticky top-0 px-20 py-3 border-b border-dashed bg-white">
             <div className="flex justify-between items-center">
-                <h1 className="text-xl">BlogIt</h1>
+                <Logo />
                 <div className="flex items-center gap-2">
                     {navLinks.map((link) => (
                         <Link
