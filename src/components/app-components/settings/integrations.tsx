@@ -11,6 +11,7 @@ import { verifyDevtoKey } from '@/src/controllers/setting.controller';
 import { IntegrationData } from '@/src/lib/types/global.types';
 import { cn } from '@/src/lib/utils';
 import { useState } from 'react';
+import { userStore } from '@/src/store/user.store';
 
 type AccountIntegrationsProps = {
     integrationsData: IntegrationData;
@@ -19,10 +20,14 @@ type AccountIntegrationsProps = {
 export const AccountIntegrations = ({
     integrationsData
 }: AccountIntegrationsProps) => {
+    const { username, email, connections, setValue } = userStore();
     const { devtoKey, hashnodeKey, updateSettings } = settingsStore();
 
-    const [devkeyVerified, setDevKeyVerified] = useState<boolean>(false);
-    const [hashnodeKeyVerified, setHashnodeKeyVerified] = useState<boolean>(false);
+    console.log(username, email, connections);
+
+    // Set default connections sync with the main store data
+    const [devkeyVerified, setDevKeyVerified] = useState<boolean>(connections.devto);
+    const [hashnodeKeyVerified, setHashnodeKeyVerified] = useState<boolean>(connections.hashnode);
 
     const handleDevVerify = async () => {
         // If already verified, do nothing
@@ -38,7 +43,8 @@ export const AccountIntegrations = ({
             const res = await verifyDevtoKey(devtoKey);
             if(res) {
                 toast.success("Dev.to key verified successfully!");
-                setDevKeyVerified(true);
+                setDevKeyVerified(true); // Update the local state
+                setValue("connections", res.connections); // Update the main store
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to verify Dev.to key. Please check your input and try again.";
@@ -75,8 +81,9 @@ export const AccountIntegrations = ({
                                 'h-9 min-w-25',
                                 devkeyVerified || integrationsData.devto && "bg-green-500 cursor-not-allowed hover:bg-green-500"
                             )}
+                            disabled={integrationsData.devto}
                         >
-                            {devkeyVerified || integrationsData.devto ? "Verified" : "Verify"}
+                            {integrationsData.devto ? "Verified" : "Verify"}
                         </Button>
                     </div>
                     <div className='space-y-2 min-w-100'>
@@ -101,8 +108,9 @@ export const AccountIntegrations = ({
                                 'h-9 min-w-25',
                                 hashnodeKeyVerified && "bg-green-500"
                             )}
+                            disabled={integrationsData.hashnode}
                         >
-                            {hashnodeKeyVerified || integrationsData.hashnode ? "Verified" : "Verify"}
+                            {integrationsData.hashnode ? "Verified" : "Verify"}
                         </Button>
                     </div>
                 </div>

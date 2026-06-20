@@ -47,3 +47,20 @@ export const updateUser = async (updates: Partial<UserData>) => {
 
     return data;
 }
+
+export const getUserData = async () => {
+    const res = await fetch("/api/me", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+
+    const data : ApiResponse<UserData> = await res.json();
+    if(!res.ok) {
+        throw new Error(data.message || "Failed to fetch user data");
+    }
+
+    return data.data;
+}

@@ -5,20 +5,25 @@ import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { toast } from 'sonner';
-import { settingsStore } from '@/src/store/setting.store';
 import { TokenData } from '@/src/lib/types/global.types';
+import { useState } from 'react';
 
 type PersonalSettingsProps = {
     user : Partial<TokenData>;
-}
+};
 
 export const PersonalSettings = ({
     user
 } : PersonalSettingsProps) => {
-    let { username, email, updateSettings } = settingsStore();
-    
-    user.username = username || user.username;
-    user.email = email || user.email;
+    const [userData, setUserData] = useState<Partial<TokenData>>(user);
+
+    const updateSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setUserData((prev) => ({
+            ...prev,
+            [id]: value,
+        }));
+    };
 
     // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     const file = e.target.files?.[0];
@@ -35,15 +40,21 @@ export const PersonalSettings = ({
     // };
 
     const handleEmailUpdate = () => {
+        // Check if any field is empty
+        if(userData.email?.trim() === "") {
+            toast("Please fill in all fields.");
+            return;
+        }
+        
         // Check if the email has changed
-        if(user.email === email) {
+        if(user.email === userData.email) {
             toast("Please enter a new email address to update.");
             return;
         }
 
         // Verify email using regex
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if(!regex.test(email)) {
+        if(userData.email && !regex.test(userData.email)) {
             toast("Please enter a valid email address.");
             return;
         }
@@ -64,8 +75,8 @@ export const PersonalSettings = ({
                         <Label htmlFor="username" className="text-sm font-medium">Username</Label>
                         <Input
                             id="username"
-                            value={username}
-                            onChange={(e) => updateSettings({ username: e.target.value })}
+                            value={userData.username}
+                            onChange={(e) => updateSettings(e)}
                             placeholder="Summarecon"
                             className="h-9"
                         />
@@ -78,8 +89,8 @@ export const PersonalSettings = ({
                         <Input
                             id="email"
                             type="email"
-                            value={email}
-                            onChange={(e) => updateSettings({ email: e.target.value })}
+                            value={userData.email}
+                            onChange={(e) => updateSettings(e)}
                             placeholder="jdoe.mobbin@gmail.com"
                             className="h-9"
                         />

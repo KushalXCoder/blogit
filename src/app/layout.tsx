@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/src/lib/utils";
 import { Navbar } from "@/src/components/app-components/navbar";
 import { Toaster } from "@/src/components/ui/sonner";
+import AuthProvider from "../lib/provider/auth.provider";
 
 const dmSans = DM_Sans({
   subsets:['latin'],
@@ -36,8 +37,10 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", dmSans.variable)}
     >
       <body className="min-h-full flex flex-col bg-accent/20">
-        {children}
-        <Toaster />
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );
