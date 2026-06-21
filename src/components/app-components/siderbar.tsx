@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-} from "@/src/components/ui/sidebar";
+} from "@/components/ui/sidebar";
 import { DocFreeIcons, GitGraph, Plus, Settings, Star } from "@hugeicons/core-free-icons";
 import { Icon } from "./icon-renderer";
 import { Button } from "../ui/button";
@@ -28,7 +28,7 @@ export const AppSidebar = () => {
   ];
 
   const handleClick = () => {
-    router.push("/blog");
+    router.push("/create");
   }
 
   return (

@@ -1,6 +1,6 @@
-import { Navbar } from "@/src/components/app-components/navbar";
-import { WaitlistDialog } from "@/src/components/app-components/waitlist/waitlist-dialog";
-import { Button } from "@/src/components/ui/button";
+import { Navbar } from "@/components/app-components/navbar";
+import { WaitlistDialog } from "@/components/app-components/waitlist/waitlist-dialog";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {

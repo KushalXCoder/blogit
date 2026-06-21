@@ -1,11 +1,11 @@
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/src/components/ui/card";
+} from "@/components/ui/card";
 import { Form } from "./form";
 
 export function SignupForm({

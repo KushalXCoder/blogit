@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/src/components/ui/field"
-import { Input } from "@/src/components/ui/input"
-import { signin } from "@/src/controllers/auth.controller";
-import { SignUpData } from "@/src/lib/types/global.types";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { signin } from "@/controllers/auth.controller";
+import { SignUpData } from "@/lib/types/global.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

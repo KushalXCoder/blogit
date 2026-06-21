@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/src/components/ui/button";
-import { Checkbox } from "@/src/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldGroup,
   FieldLabel,
-} from "@/src/components/ui/field";
-import { Input } from "@/src/components/ui/input";
-import { addUserToWaitlist } from "@/src/controllers/user.controller";
-import { WaitlistData } from "@/src/lib/types/global.types";
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { addUserToWaitlist } from "@/controllers/user.controller";
+import { WaitlistData } from "@/lib/types/global.types";
 import { useState } from "react";
 import { toast } from "sonner";
 

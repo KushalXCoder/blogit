@@ -1,8 +1,8 @@
-import { connectDb } from "@/src/lib/drivers/db";
-import { User } from "@/src/models/user.model";
+import { connectDb } from "@/lib/drivers/db";
+import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { signToken } from "@/src/lib/helper/signToken";
+import { signToken } from "@/lib/helper/signToken";
 
 export const POST = async (req: NextRequest) => {
     try {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkToken } from '@/src/lib/helper/checkToken';
+import { checkToken } from '@/lib/helper/checkToken';
 
 export const GET = async (req: NextRequest) => {
     try {

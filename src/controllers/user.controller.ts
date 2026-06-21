@@ -1,8 +1,8 @@
 // All the user related frontend API calls to interact with the backend
 
-import { ApiResponse } from "@/src/lib/types/api.types";
-import { WaitlistData } from "@/src/lib/types/global.types";
-import { UserData } from "@/src/lib/types/user.types";
+import { ApiResponse } from "@/lib/types/api.types";
+import { WaitlistData } from "@/lib/types/global.types";
+import { UserData } from "@/lib/types/user.types";
 
 export const addUserToWaitlist = async (data: WaitlistData) => {
     try {

@@ -1,4 +1,4 @@
-import { OtpInput } from "@/src/components/app-components/auth/otp";
+import { OtpInput } from "@/components/app-components/auth/otp";
 
 const OtpPage = () => {
     return (

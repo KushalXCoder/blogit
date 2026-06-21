@@ -1,6 +1,6 @@
 // Return the user's session data if they are logged in, otherwise return null
 
-import { checkToken } from "@/src/lib/helper/checkToken"
+import { checkToken } from "@/lib/helper/checkToken"
 import { NextResponse } from "next/server";
 
 export const GET = async () => {

@@ -1,10 +1,10 @@
-import { connectDb } from "@/src/lib/drivers/db";
-import { checkToken } from "@/src/lib/helper/checkToken";
-import { deepChecker } from "@/src/lib/helper/deepChecker";
-import { UserData } from "@/src/lib/types/user.types";
-import { User } from "@/src/models/user.model";
+import { connectDb } from "@/lib/drivers/db";
+import { checkToken } from "@/lib/helper/checkToken";
+import { deepChecker } from "@/lib/helper/deepChecker";
+import { UserData } from "@/lib/types/user.types";
+import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
-import { signToken } from "@/src/lib/helper/signToken";
+import { signToken } from "@/lib/helper/signToken";
 
 type UserUpdatePayload = {
     updates: Partial<UserData>;

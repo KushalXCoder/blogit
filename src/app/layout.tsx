@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/src/lib/utils";
-import { Navbar } from "@/src/components/app-components/navbar";
-import { Toaster } from "@/src/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/app-components/navbar";
+import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "../lib/provider/auth.provider";
 
 const dmSans = DM_Sans({

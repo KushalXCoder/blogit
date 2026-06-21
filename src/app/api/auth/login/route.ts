@@ -1,9 +1,9 @@
-import { checkPassword } from "@/src/lib/helper/checkPassoword";
-import { connectDb } from "@/src/lib/drivers/db";
-import { signToken } from "@/src/lib/helper/signToken";
+import { checkPassword } from "@/lib/helper/checkPassoword";
+import { connectDb } from "@/lib/drivers/db";
+import { signToken } from "@/lib/helper/signToken";
 import { NextResponse } from "next/server";
-import { User } from "@/src/models/user.model";
-// import { prisma } from "@/src/lib/prisma";
+import { User } from "@/models/user.model";
+// import { prisma } from "@/lib/prisma";
 
 export const POST = async (req: NextResponse) => {
     try {

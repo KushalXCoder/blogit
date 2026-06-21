@@ -1,6 +1,6 @@
 // This routes creates the auth credientials for imagekit upload and checks if the user is authenticated before providing the credentials
 
-import { checkToken } from "@/src/lib/helper/checkToken";
+import { checkToken } from "@/lib/helper/checkToken";
 import { NextResponse } from "next/server";
 import { getUploadAuthParams } from "@imagekit/next/server";
 

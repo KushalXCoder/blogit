@@ -1,6 +1,6 @@
-import { DocsNavbar } from "@/src/components/app-components/docs/docs-navbar";
-import { AppSidebar } from "@/src/components/app-components/siderbar";
-import { SidebarProvider, SidebarTrigger } from "@/src/components/ui/sidebar";
+import { DocsNavbar } from "@/components/app-components/docs/docs-navbar";
+import { AppSidebar } from "@/components/app-components/siderbar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 type DocsLayoutProps = {
     children: React.ReactNode;

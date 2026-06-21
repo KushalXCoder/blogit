@@ -1,9 +1,9 @@
 "use client";
 
-import { PersonalSettings } from "@/src/components/app-components/settings/personal-settings";
-import { Profile } from "@/src/components/app-components/settings/profile";
-import { AccountIntegrations } from "@/src/components/app-components/settings/integrations";
-import { userStore } from "@/src/store/user.store";
+import { PersonalSettings } from "@/components/app-components/settings/personal-settings";
+import { Profile } from "@/components/app-components/settings/profile";
+import { AccountIntegrations } from "@/components/app-components/settings/integrations";
+import { userStore } from "@/store/user.store";
 import { Loader } from "./loader";
 
 const Settings = () => {

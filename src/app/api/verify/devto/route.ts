@@ -1,8 +1,8 @@
-import { checkToken } from "@/src/lib/helper/checkToken";
-import { signToken } from "@/src/lib/helper/signToken";
+import { checkToken } from "@/lib/helper/checkToken";
+import { signToken } from "@/lib/helper/signToken";
 import { NextRequest, NextResponse } from "next/server";
-import { connectDb } from "@/src/lib/drivers/db";
-import { User } from "@/src/models/user.model";
+import { connectDb } from "@/lib/drivers/db";
+import { User } from "@/models/user.model";
 
 export const POST = async (req: NextRequest) => {
     try {

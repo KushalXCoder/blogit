@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
 
 export const OtpInput = () => {

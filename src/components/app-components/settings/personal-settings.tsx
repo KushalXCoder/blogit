@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/src/components/ui/button';
-import { Input } from '@/src/components/ui/input';
-import { Label } from '@/src/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { TokenData } from '@/src/lib/types/global.types';
+import { TokenData } from '@/lib/types/global.types';
 import { useState } from 'react';
 
 type PersonalSettingsProps = {

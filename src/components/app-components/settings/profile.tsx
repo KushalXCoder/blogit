@@ -1,14 +1,14 @@
 "use client";
 
-import { Avatar, AvatarImage, AvatarFallback } from '@/src/components/ui/avatar';
-import { Button } from '@/src/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
-import { settingsStore } from '@/src/store/setting.store';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { settingsStore } from '@/store/setting.store';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { updateImage } from '@/src/controllers/setting.controller';
-import { updateUser } from '@/src/controllers/user.controller';
-import { UserData } from '@/src/lib/types/user.types';
+import { updateImage } from '@/controllers/setting.controller';
+import { updateUser } from '@/controllers/user.controller';
+import { UserData } from '@/lib/types/user.types';
 
 type ProfileProps = {
     userImage: UserData["image"];

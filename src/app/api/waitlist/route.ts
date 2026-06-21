@@ -1,8 +1,8 @@
-import { connectDb } from "@/src/lib/drivers/db";
-import { Waitlist } from "@/src/models/waitlist.model";
+import { connectDb } from "@/lib/drivers/db";
+import { Waitlist } from "@/models/waitlist.model";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { signToken } from "@/src/lib/helper/signToken";
+import { signToken } from "@/lib/helper/signToken";
 
 export const POST = async (req: NextRequest) => {
     try {

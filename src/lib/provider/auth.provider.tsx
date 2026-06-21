@@ -1,8 +1,8 @@
 "use client";
 
-import { getUserData } from "@/src/controllers/user.controller";
+import { getUserData } from "@/controllers/user.controller";
 import { useEffect } from "react";
-import { userStore } from "@/src/store/user.store";
+import { userStore } from "@/store/user.store";
 import { toast } from "sonner";
 
 function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
