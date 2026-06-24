@@ -22,7 +22,7 @@ export const verifyDevtoKey = async (devtoKey: string) => {
     return data.data;
 }
 
-export const authenticator = async () => {
+const authenticator = async () => {
     const res = await fetch("/api/upload/auth");
 
     let data;
@@ -41,7 +41,7 @@ export const authenticator = async () => {
 };
 
 // Update Image
-export const updateImage = async (file: File) => {
+export const uploadImage = async (file: File) => {
     try {
         const { signature, expire, token, publicKey } = await authenticator();
 
