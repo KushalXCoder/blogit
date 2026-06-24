@@ -3,7 +3,7 @@ import { connectDb } from "@/lib/drivers/db";
 import { signToken } from "@/lib/helper/signToken";
 import { NextResponse } from "next/server";
 import { User } from "@/models/user.model";
-// import { prisma } from "@/lib/prisma";
+import { getTokenData } from "@/lib/helper/getTokenData";
 
 export const POST = async (req: NextResponse) => {
     try {
@@ -15,14 +15,6 @@ export const POST = async (req: NextResponse) => {
 
         // Connect to the database
         await connectDb();
-
-        // Check if the user exists in the database
-        // const user = await prisma.user.findUnique({
-        //     where: { email }
-        // });
-        // if(!user) {
-        //     return NextResponse.json({ message: "User not found" }, { status: 404 });
-        // }
 
         const user = await User.findOne({ email });
         if(!user) {
@@ -36,15 +28,9 @@ export const POST = async (req: NextResponse) => {
         }
 
         // Create a token
-        const token = signToken({
-            username: user.username,
-            email: user.email,
-            image: user.image,
-            connections: {
-                devto: user.connections.devtoConnected,
-                hashnode: user.connections.hashnodeConnected
-            },
-        });
+        console.log(user._id);
+        const tokenData = getTokenData(user);
+        const token = signToken(tokenData);
 
         // Set the token in an HTTP-only cookie
         const res = NextResponse.json({ message: "Login successful" }, { status: 200 });
