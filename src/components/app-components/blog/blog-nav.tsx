@@ -11,7 +11,7 @@ export const BlogNav = () => {
         window.history.back();
     };
     return (
-        <div className="w-full flex justify-between items-center px-10 pb-3">
+        <div className="sticky top-0 bg-white z-10 w-full flex justify-between items-center px-10 py-3">
             <div
                 className="flex items-center gap-2 cursor-pointer hover:text-blue-500 transition-colors"
                 onClick={handleBack}
