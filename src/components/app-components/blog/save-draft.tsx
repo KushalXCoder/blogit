@@ -1,0 +1,33 @@
+import { Button } from "@/components/ui/button";
+import { saveDraft } from "@/controllers/blog.controller";
+import { BlogStore } from "@/store/blog.store";
+import { toast } from "sonner";
+
+export const SaveDraft = () => {
+    const { title, coverImage, content, words } = BlogStore();
+
+    const handleSaveDraft = async () => {
+        // Check if the everything is empty
+        if(!title && !coverImage && !content){
+            toast.error("Cannot save empty draft");
+            return;
+        }
+
+        // Store to the backend
+        try {
+            const res = await saveDraft({ title, coverImage, content, words });
+            console.log(res);
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Failed to save draft");
+        }
+    }
+
+    return (
+        <Button
+            onClick={handleSaveDraft}
+            variant="outline"
+        >
+            Save Draft
+        </Button>
+    )
+}
