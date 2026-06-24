@@ -3,6 +3,7 @@ import { signToken } from "@/lib/helper/signToken";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDb } from "@/lib/drivers/db";
 import { User } from "@/models/user.model";
+import { getTokenData } from "@/lib/helper/getTokenData";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -42,21 +43,23 @@ export const POST = async (req: NextRequest) => {
 
         await user.save();
 
-        const data = {
-            email: user.email,
-            username: user.username,
-            image: user.image,
-            connections: {
-                devto: true,
-                hashnode: user.connections.hashnode,
-            },
-        };
+        
+        // const data = {
+            //     email: user.email,
+            //     username: user.username,
+            //     image: user.image,
+            //     connections: {
+                //         devto: true,
+                //         hashnode: user.connections.hashnode,
+        //     },
+        // };
 
-        const token = signToken(data);
+        const tokenData = getTokenData(user);
+        const token = signToken(tokenData);
 
         const response = NextResponse.json({
             message: "Verification successful",
-            data: data,
+            data: tokenData,
         }, { status: 200 });
 
         response.cookies.set("blogit-token", token, {

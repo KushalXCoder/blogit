@@ -3,6 +3,7 @@ import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { signToken } from "@/lib/helper/signToken";
+import { getTokenData } from "@/lib/helper/getTokenData";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -31,14 +32,8 @@ export const POST = async (req: NextRequest) => {
         await User.create({ username, email, password: hashedPassword });
 
         // Create a token
-        const token = signToken({ 
-            username, 
-            email,
-            connections: {
-                devto: false,
-                hashnode: false
-            }
-        });
+        const tokenData = getTokenData(exisitingUser);
+        const token = signToken(tokenData);
 
         // Set the token in an HTTP-only cookie
         const res = NextResponse.json({ message: "User created successfully" }, { status: 201 });

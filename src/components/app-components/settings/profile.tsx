@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { settingsStore } from '@/store/setting.store';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { updateImage } from '@/controllers/setting.controller';
+import { uploadImage } from '@/controllers/setting.controller';
 import { updateUser } from '@/controllers/user.controller';
 import { UserData } from '@/lib/types/user.types';
 
@@ -19,7 +19,7 @@ export const Profile = ({
 } : ProfileProps) => {
     let { image, hasImageSelected, updateSettings } = settingsStore();
 
-    const [uploading, setUploading] = useState<boolean>(false);
+    const [uploading] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     
     image = image || userImage;
@@ -56,9 +56,7 @@ export const Profile = ({
 
         try {
             // Upload the image to imagekit
-            const res = await updateImage(file);
-            console.log("Upload successful:", res);
-
+            const res = await uploadImage(file);
             toast.success('Profile image updated successfully');
 
             // Create the updates object
@@ -83,8 +81,6 @@ export const Profile = ({
             }
         }
     }
-
-    console.log(image);
 
     return (
         <Card className='shadow'>

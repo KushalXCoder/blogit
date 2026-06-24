@@ -11,6 +11,7 @@ export type UserSettings = {
 };
 
 export type UserData = {
+    _id: string;
     email: string;
     username: string;
     image: string;

@@ -5,6 +5,7 @@ import { UserData } from "@/lib/types/user.types";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import { signToken } from "@/lib/helper/signToken";
+import { getTokenData } from "@/lib/helper/getTokenData";
 
 type UserUpdatePayload = {
     updates: Partial<UserData>;
@@ -52,12 +53,8 @@ export const POST = async (req: NextRequest) => {
         await user.save();
 
         // Create a token and sign it with jwt
-        const token = signToken({
-            email: user.email,
-            username: user.username,
-            image: user.image,
-            connections: user.connections,
-        }, "7d");
+        const tokenData = getTokenData(user);
+        const token = signToken(tokenData);
 
         // Attach the token to the response as a cookie
         const res = NextResponse.json({ message: 'User details updated successfully' }, { status: 200 });

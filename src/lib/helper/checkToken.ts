@@ -22,10 +22,15 @@ export const checkToken = async (token?: string) : Promise<TokenData | null> => 
     let decoded;
 
     try {
-        decoded = jwt.verify(token, JWT_SECRET as string);
+        decoded = jwt.verify(token, JWT_SECRET as string) as TokenData;
     } catch {
         return null;
     }
 
-    return decoded as TokenData;
+    if (!decoded._id) {
+        console.error("Token missing _id:", decoded);
+        return null;
+    }
+
+    return decoded;
 }
