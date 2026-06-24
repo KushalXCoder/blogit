@@ -23,8 +23,6 @@ export const AccountIntegrations = ({
     const { username, email, connections, setValue } = userStore();
     const { devtoKey, hashnodeKey, updateSettings } = settingsStore();
 
-    console.log(username, email, connections);
-
     // Set default connections sync with the main store data
     const [devkeyVerified, setDevKeyVerified] = useState<boolean>(connections.devto);
     const [hashnodeKeyVerified, setHashnodeKeyVerified] = useState<boolean>(connections.hashnode);

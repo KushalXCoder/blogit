@@ -22,6 +22,7 @@ export const AppSidebar = () => {
   const router = useRouter();
   const sidebarItems = [
     { name: "Blogs", url: "/dashboard", icon: DocFreeIcons },
+    { name: 'Drafts', url: "/dashboard/drafts", icon: DocFreeIcons },
     { name: "Starred", url: "/dashboard/starred", icon: Star },
     { name: "Analytics", url: "/dashboard/analytics", icon: GitGraph },
     { name: 'Settings', url: "/dashboard/settings", icon: Settings }
