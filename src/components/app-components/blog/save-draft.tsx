@@ -16,7 +16,7 @@ export const SaveDraft = () => {
         // Store to the backend
         try {
             const res = await saveDraft({ title, coverImage, content, words });
-            console.log(res);
+            toast.success(res.message || "Draft saved successfully");
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Failed to save draft");
         }
