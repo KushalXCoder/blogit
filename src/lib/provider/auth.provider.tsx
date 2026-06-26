@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserData } from "@/controllers/user.controller";
+import { getUserData } from "@/services/user.service";
 import { useEffect } from "react";
 import { userStore } from "@/store/user.store";
 import { toast } from "sonner";

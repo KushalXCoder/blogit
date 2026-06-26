@@ -8,8 +8,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { signin } from "@/controllers/auth.controller";
-import { SignUpData } from "@/lib/types/global.types";
+import { signin } from "@/services/auth.service";
+import { SignUpData } from "@/lib/types/auth.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

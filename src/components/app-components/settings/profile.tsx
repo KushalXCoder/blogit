@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { settingsStore } from '@/store/setting.store';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { uploadImage } from '@/controllers/setting.controller';
-import { updateUser } from '@/controllers/user.controller';
+import { uploadImage } from '@/services/setting.service';
+import { updateUser } from '@/services/user.service';
 import { UserData } from '@/lib/types/user.types';
 
 type ProfileProps = {

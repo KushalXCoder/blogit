@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadImage } from "@/controllers/setting.controller";
+import { uploadImage } from "@/services/setting.service";
 import { BlogStore } from "@/store/blog.store";
 import { toast } from "sonner";
 import Image from "next/image";
