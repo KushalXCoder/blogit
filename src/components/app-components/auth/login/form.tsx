@@ -8,7 +8,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { login } from "@/controllers/auth.controller";
+import { login } from "@/services/auth.service";
 import { LoginData } from "@/lib/types/auth.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

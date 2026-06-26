@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { settingsStore } from '@/store/setting.store';
 import { toast } from 'sonner';
-import { verifyDevtoKey } from '@/controllers/setting.controller';
+import { verifyDevtoKey } from '@/services/setting.service';
 import { IntegrationData } from '@/lib/types/global.types';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';

@@ -8,7 +8,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { addUserToWaitlist } from "@/controllers/user.controller";
+import { addUserToWaitlist } from "@/services/user.service";
 import { WaitlistData } from "@/lib/types/global.types";
 import { useState } from "react";
 import { toast } from "sonner";

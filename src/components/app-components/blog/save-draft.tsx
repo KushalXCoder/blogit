@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { saveDraft } from "@/controllers/blog.controller";
+import { saveDraft } from "@/services/blog.service";
 import { BlogStore } from "@/store/blog.store";
 import { toast } from "sonner";
 
@@ -18,6 +18,7 @@ export const SaveDraft = () => {
             const res = await saveDraft({ title, coverImage, content, words });
             toast.success(res.message || "Draft saved successfully");
         } catch (error) {
+            console.log(error);
             toast.error(error instanceof Error ? error.message : "Failed to save draft");
         }
     }
