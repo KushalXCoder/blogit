@@ -16,6 +16,7 @@ export const saveDraft = async ({
 
     const data = await res.json();
     if(!res.ok) {
+        console.log(res);
         throw new Error(data.message || "Failed to save draft");
     }
 
