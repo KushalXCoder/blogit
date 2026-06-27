@@ -17,6 +17,7 @@ import { Icon } from "./icon-renderer";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
+import Link from "next/link";
 
 export const AppSidebar = () => {
   const router = useRouter();
@@ -52,10 +53,10 @@ export const AppSidebar = () => {
               {sidebarItems.map((item) => (
                 <SidebarMenuItem key={item.name} className="mb-1">
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <Icon icon={item.icon} className="mr-2" />
                       <span>{item.name}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

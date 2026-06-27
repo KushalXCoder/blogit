@@ -49,11 +49,12 @@ export const CoverImage = () => {
             <>
                 {coverImage ? (
                     <Image
-                        className="object-cover rounded-sm"
                         src={coverImage}
                         alt="Cover"
                         width={1000}
                         height={1000}
+                        className="w-auto h-auto max-w-full"
+                        loading="lazy"
                     />
                 ) : (
                     <span>Cover Image</span>

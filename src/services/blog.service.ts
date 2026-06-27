@@ -1,5 +1,10 @@
 // All the blog related controllers will be here
 
+import { ApiResponse } from "@/lib/types/api.types";
+import { BlogData, UserBlogData } from "@/lib/types/blog.types";
+
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000/api";
+
 export const saveDraft = async ({
     title,
     coverImage,
@@ -21,4 +26,40 @@ export const saveDraft = async ({
     }
 
     return data;
+}
+
+// Service to get all blogs for the user
+export const getAllBlogs = async (userId: string) => {
+    const res = await fetch(`${BASE_URL}/blog/get-all-blogs`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+    });
+
+    const blogsRes : ApiResponse<UserBlogData[]> = await res.json();
+    if(!res.ok) {
+        throw new Error("Failed to fetch blogs");
+    }
+
+    return blogsRes.data;
+}
+
+// Service to get a single blog by its ID
+export const getBlog = async (blogId: string) => {
+    const res = await fetch(`${BASE_URL}/blog/get-blog`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ blogId }),
+    });
+
+    const blogRes : ApiResponse<UserBlogData> = await res.json();
+    if(!res.ok) {
+        throw new Error("Failed to fetch blog");
+    }
+
+    return blogRes.data;
 }
