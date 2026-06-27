@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/app-components/navbar";
 import { Toaster } from "@/components/ui/sonner";
-import AuthProvider from "../lib/provider/auth.provider";
+import AuthProvider from "@/lib/provider/auth.provider";
 
 const dmSans = DM_Sans({
-  subsets:['latin'],
-  variable:'--font-sans'
+  subsets: ['latin'],
+  variable: '--font-sans'
 });
 
 const geistSans = Geist({
@@ -34,13 +33,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full scroll-pb-20", "antialiased", geistSans.variable, geistMono.variable, "font-sans", dmSans.variable)}
+      className={cn("scroll-pb-20", "antialiased", geistSans.variable, geistMono.variable, "font-sans", dmSans.variable)}
     >
-      <body className="min-h-full flex flex-col bg-accent/20">
+      <body>
         <AuthProvider>
           {children}
-          <Toaster />
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

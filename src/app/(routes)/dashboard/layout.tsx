@@ -1,6 +1,6 @@
-import { DocsNavbar } from "@/components/app-components/docs/docs-navbar";
 import { AppSidebar } from "@/components/app-components/siderbar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 type DocsLayoutProps = {
     children: React.ReactNode;
@@ -12,10 +12,11 @@ const DocsLayout = ({
     return (
         <SidebarProvider>
             <div className="w-full flex flex-col bg-white">
-                {/* <DocsNavbar /> */}
                 <main className="flex-1 flex h-full">
                     <AppSidebar />
-                    {children}
+                    <TooltipProvider>
+                        {children}
+                    </TooltipProvider>
                 </main>
             </div>
         </SidebarProvider>

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { UserData } from '../lib/types/user.types';
 
-type UserStoreType = UserData & {
+type UserStoreType = Omit<UserData,"_id"> & {
     loading: boolean;
     setUser: (user: UserData) => void;
     setValue: (key: keyof UserData, value: any) => void;
