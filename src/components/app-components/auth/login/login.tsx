@@ -14,7 +14,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="px-2 py-7 shadow-md">
         <CardHeader>
           <CardTitle>Login for an account</CardTitle>
           <CardDescription>
