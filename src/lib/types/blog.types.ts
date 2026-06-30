@@ -8,6 +8,6 @@ export type BlogData = {
 export type UserBlogData = BlogData & {
     _id: string;
     user: string;
-    tage: string[];
+    tags: string[];
     status: "draft" | "published";
 };

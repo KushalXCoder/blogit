@@ -54,7 +54,7 @@ export const CoverImage = () => {
                         width={1000}
                         height={1000}
                         className="w-auto h-auto max-w-full"
-                        loading="lazy"
+                        loading="eager"
                     />
                 ) : (
                     <span>Cover Image</span>

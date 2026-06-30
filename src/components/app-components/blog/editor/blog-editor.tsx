@@ -1,19 +1,36 @@
 "use client";
 
-import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
 import "@/app/globals.css";
+
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/shadcn";
 import { BlogStore } from "@/store/blog.store";
 import { Block } from "@blocknote/core";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Editor = () => {
-  const editor = useCreateBlockNote();
-  const { setDetails } = BlogStore();
-
+  const { content, setDetails } = BlogStore();
+  const initialInstance = useRef<Boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Create an editor instance with the initial content from the store
+  const editor = useCreateBlockNote();
+
+  useEffect(() => {
+    if(!content) return;
+    if(initialInstance.current) return;
+
+    async function loadContent() {
+      initialInstance.current = true;
+      const blocks = editor.tryParseMarkdownToBlocks(content);
+      editor.replaceBlocks(editor.document, blocks);
+    }
+
+    loadContent();
+
+  }, [content]);
 
   const countWords = (blocks: Block[]) => {
     let total = 0;
