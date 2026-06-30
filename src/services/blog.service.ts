@@ -5,6 +5,10 @@ import { BlogData, UserBlogData } from "@/lib/types/blog.types";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000/api";
 
+type UpdateBlogData = BlogData & {
+    blogId: string;
+};
+
 export const saveDraft = async ({
     title,
     coverImage,
@@ -62,4 +66,27 @@ export const getBlog = async (blogId: string) => {
     }
 
     return blogRes.data;
+}
+
+export const updateBlog = async ({
+    blogId,
+    title,
+    coverImage,
+    content,
+    words
+} : UpdateBlogData) => {
+    const res = await fetch("/api/blog/update", {
+        method: "PUT",
+        body: JSON.stringify({ blogId, title, coverImage, content, words }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    const updateRes : ApiResponse<Boolean> = await res.json();
+    if(!res.ok) {
+        throw new Error(updateRes.message || "Failed to update blog");
+    }
+
+    return updateRes.data;
 }
