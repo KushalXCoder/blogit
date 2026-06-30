@@ -16,7 +16,7 @@ export const BlogContent = () => {
                     placeholder="Blog Title"
                     value={title}
                     onChange={(e) => setDetails({ title: e.target.value })}
-                    className="px-10 text-2xl bg-transparent border-none focus:outline-none"
+                    className="px-10 text-3xl font-semibold bg-transparent border-none focus:outline-none"
                 />
                 <Editor />
                 <BlogFooter />

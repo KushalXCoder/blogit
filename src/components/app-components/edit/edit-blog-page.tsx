@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { getBlog } from "@/services/blog.service";
 import { BlogStore } from "@/store/blog.store";
 import Loading from "./loading";
+import { UpdateBlog } from "./update-blog";
 
 type EditBlogPageProps = {
     blogId: string;
@@ -49,9 +50,7 @@ export const EditBlogPage = ({
         <div className="min-h-screen flex flex-col border-dashed border-x bg-white pt-2 pb-5">
             <div className="flex justify-between items-center pt-3 pb-4 px-10">
                 <BackNavigation />
-                <Button variant="default" className="px-5">
-                    Save
-                </Button>
+                <UpdateBlog blogId={blogId} />
             </div>
             <BlogContent />
         </div>
