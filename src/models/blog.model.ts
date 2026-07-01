@@ -28,6 +28,6 @@ const blogSchema = new mongoose.Schema({
         enum: ["draft", "published"],
         default: "draft"
     },
-});
+}, { timestamps: true });
 
 export const Blog = mongoose.models.Blog || mongoose.model('Blog', blogSchema);

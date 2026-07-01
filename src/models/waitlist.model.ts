@@ -14,6 +14,6 @@ const waitlistSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     }
-});
+}, { timestamps: true });
 
 export const Waitlist = mongoose.models.Waitlist || mongoose.model("Waitlist", waitlistSchema);
