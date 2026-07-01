@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, DM_Sans } from "next/font/google";
+import { Geist, Geist_Mono, DM_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
@@ -20,6 +20,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
   title: "blogit - Collaborative Document Editor",
   description: "A collaborative document editor with the capabilities of RAG and AI.",
@@ -33,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("scroll-pb-20", "antialiased", geistSans.variable, geistMono.variable, "font-sans", dmSans.variable)}
+      className={cn("scroll-pb-20", "antialiased", geistSans.variable, geistMono.variable, "font-sans", dmSans.variable, instrumentSerif.variable)}
     >
       <body>
         <AuthProvider>
