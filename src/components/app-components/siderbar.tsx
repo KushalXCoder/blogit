@@ -37,7 +37,7 @@ export const AppSidebar = () => {
     <Sidebar className="sticky h-full px-2 py-3 border-dashed">
       <SidebarHeader className="flex justify-between space-y-2">
         <div className="flex justify-between items-center">
-          <Logo />
+          <Logo className="text-2xl" iconClassname="size-7" />
           <SidebarTrigger />
         </div>
         <Button onClick={handleClick} className="w-full border-gray-300 border-dashed bg-transparent hover:bg-accent text-black transition-colors">
