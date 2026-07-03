@@ -1,13 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { BackNavigation } from "../back-nav";
 import { BlogContent } from "../blog/blog-content";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getBlog } from "@/services/blog.service";
 import { BlogStore } from "@/store/blog.store";
-import Loading from "./loading";
+import Loading from "../blog/loading";
 import { UpdateBlog } from "./update-blog";
 
 type EditBlogPageProps = {
