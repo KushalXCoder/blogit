@@ -1,21 +1,21 @@
 "use client";
 
-import { BackNavigation } from "../back-nav";
-import { BlogContent } from "../blog/blog-content";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { getBlog } from "@/services/blog.service";
 import { BlogStore } from "@/store/blog.store";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import Loading from "../blog/loading";
-import { UpdateBlog } from "./update-blog";
+import { BackNavigation } from "../back-nav";
+import { BlogContent } from "../blog/blog-content";
+import { EditButton } from "../edit/edit-button";
 
-type EditBlogPageProps = {
+type ViewBlogPageProps = {
     blogId: string;
 };
 
-export const EditBlogPage = ({
+export const ViewBlogPage = ({
     blogId
-} : EditBlogPageProps) => {
+} : ViewBlogPageProps) => {
     const [loading, setLoading] = useState<boolean>(true);
     const { setDetails } = BlogStore();
 
@@ -47,9 +47,9 @@ export const EditBlogPage = ({
 
     return (
         <div className="min-h-screen flex flex-col border-dashed border-x bg-white pt-2 pb-5">
-            <div className="flex justify-between items-center pt-3 pb-4 px-10">
+            <div className="sticky top-0 flex justify-between items-center pt-3 pb-4 px-10 bg-white z-10">
                 <BackNavigation />
-                <UpdateBlog blogId={blogId} />
+                <EditButton blogId={blogId} />
             </div>
             <BlogContent />
         </div>

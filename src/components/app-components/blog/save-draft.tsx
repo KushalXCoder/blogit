@@ -1,10 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { saveDraft } from "@/services/blog.service";
 import { BlogStore } from "@/store/blog.store";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export const SaveDraft = () => {
     const { title, coverImage, content, words } = BlogStore();
+    const router = useRouter();
 
     const handleSaveDraft = async () => {
         // Check if the everything is empty
@@ -17,6 +21,10 @@ export const SaveDraft = () => {
         try {
             const res = await saveDraft({ title, coverImage, content, words });
             toast.success(res.message || "Draft saved successfully");
+
+            // Go back to dashbaord and also refresh it for fresh data
+            router.push("/dashboard");
+            router.refresh();
         } catch (error) {
             console.log(error);
             toast.error(error instanceof Error ? error.message : "Failed to save draft");

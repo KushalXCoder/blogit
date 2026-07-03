@@ -90,3 +90,23 @@ export const updateBlog = async ({
 
     return updateRes.data;
 }
+
+// Service to delete a blog
+export const deleteBlog = async (
+    blogId: string,
+) => {
+    const res = await fetch("/api/blog/delete", {
+        method: "DELETE",
+        body: JSON.stringify({ blogId }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    const deleteBlogData : ApiResponse<boolean> = await res.json();
+    if(!res.ok) {
+        throw new Error(deleteBlogData.message || "Failed to delete blog");
+    }
+
+    return deleteBlogData.data;
+}
