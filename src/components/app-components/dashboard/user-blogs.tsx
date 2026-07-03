@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { TooltipRenderer } from "../tooltip-renderer";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { DeleteBox } from "../delete-box";
 
 type UserBlogsProps = {
   blogs: UserBlogData[];
@@ -33,12 +34,9 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
   return (
     <div
       className={cn(
-        // border (not ring) + isolate avoids a hairline gap some browsers render
-        // when overflow-hidden + rounded corners are combined with a box-shadow ring
         "group relative isolate flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md",
       )}
     >
-      {/* Folded-corner status flag, replaces the old full-width gradient banner */}
       <div className="absolute right-0 top-0 h-20 w-20 overflow-hidden">
         <div
           className={cn(
@@ -54,9 +52,7 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
         <div className="mb-2 flex items-center gap-2 pr-10 text-xs text-muted-foreground">
           <Calendar className="h-3.5 w-3.5 shrink-0" />
           <span>{formatDistanceToNow(createdAt, { addSuffix: true })}</span>
-
           <span className="h-1 w-1 shrink-0 rounded-full bg-muted-foreground/60" />
-
           <Clock className="h-3.5 w-3.5 shrink-0" />
           <span>{readMinutes} min read</span>
         </div>
@@ -65,9 +61,9 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
           {blog.title || "Untitled blog"}
         </h3>
 
-        {blog.tage && blog.tage.length > 0 && (
+        {blog.tags && blog.tags.length > 0 && (
           <div className="mb-4 flex flex-wrap gap-1.5">
-            {blog.tage.map((tag, i) => (
+            {blog.tags.map((tag, i) => (
               <span
                 key={i}
                 className="rounded-md border border-border/70 bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
@@ -101,19 +97,13 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={() => window.open(`/blog/${blog._id}`, "_self")}
+              onClick={() => router.push(`/view/${blog._id}`)}
             >
               <Eye className="h-4 w-4" />
             </Button>
           </TooltipRenderer>
-          <TooltipRenderer text="View blog content">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <TooltipRenderer text="Delete">
+            <DeleteBox blogId={blog._id} />
           </TooltipRenderer>
         </div>
       </CardFooter>
