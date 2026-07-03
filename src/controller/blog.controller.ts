@@ -57,7 +57,7 @@ export const getAllBlogs = async (req: NextRequest) => {
 
         await connectDb();
 
-        const blogs = await Blog.find({ user: userId });
+        const blogs = await Blog.find({ user: userId }).select("-content");
         if (!blogs || blogs.length === 0) {
             return NextResponse.json({ message: "No blogs found" }, { status: 404 });
         }
@@ -154,6 +154,44 @@ export const updateBlog = async (req: NextRequest) => {
 
     } catch (error) {
         console.error("Error updating blog:", error);
+        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    }
+}
+
+// Controller to delete a blog by its ID
+export const deleteBlog = async (req: NextRequest) => {
+    try {
+        const user = await isUserAuthenticated(req);
+        if(!user.authenticated) {
+            return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+        }
+
+        const decoded = user.data;
+        
+        const { blogId } = await req.json();
+        if(!blogId) {
+            return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+        }
+
+        await connectDb();
+        
+        const blog = await Blog.findById(blogId).populate("user", "email");
+        if(!blog) {
+            return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+        }
+
+        if(blog.user.email !== decoded.email) {
+            return NextResponse.json({ message: "Not authorized to delete this blog" }, { status: 403 });
+        }
+
+        const deleteRes = await Blog.findByIdAndDelete(blogId);
+        if(!deleteRes) {
+            return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Blog deleted successfully", data: true }, { status: 200 });
+    } catch (error) {
+        console.error("Error deleting blog:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }
