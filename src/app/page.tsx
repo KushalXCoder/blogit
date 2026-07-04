@@ -36,7 +36,7 @@ export default function Home() {
               We help you connect to multiple platforms like Hashnode and Dev.to to upload blogs safely and securely at once like a jet.
             </p>
             <div className="flex items-center gap-4 justify-center">
-              <Link href="/dashboard">
+              <Link href="/dashboard" prefetch={false}>
                 <Button
                   variant="default"
                   className="px-6 py-2.5 rounded-full text-sm font-semibold h-auto cursor-pointer"
