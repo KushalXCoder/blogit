@@ -18,17 +18,14 @@ export const addUserToWaitlist = async (req: NextRequest) => {
             $or: [{ name }, { email }],
         });
 
-        // Use let, because we will assign the response later based on the condition
-        let res;
-    
         if(user) {
-            res = NextResponse.json({ message: "User already in waitlist" }, { status: 400 });
+            return NextResponse.json({ message: "User already in waitlist" }, { status: 400 });
         }
     
         // Add user to the waitlist
         await Waitlist.create({ name, email, receiveUpdates });
     
-        res = NextResponse.json({ message: "User added to waitlist" }, { status: 201 });
+        const res = NextResponse.json({ message: "User added to waitlist" }, { status: 201 });
         
         // Create a token
         const data = { name, email, receiveUpdates };
@@ -37,9 +34,10 @@ export const addUserToWaitlist = async (req: NextRequest) => {
         // Set cookie and attach with the response
         res.cookies.set("waitlist-token", token, {
             httpOnly: true,
-            sameSite: "strict",
-            secure: true,
-            maxAge: 365 * 60 * 60 * 24 * 30, // 365 days
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            maxAge: 365 * 24 * 60 * 60, // 365 days
         });
     
         return res;

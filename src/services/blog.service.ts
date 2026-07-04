@@ -3,7 +3,11 @@
 import { ApiResponse } from "@/lib/types/api.types";
 import { BlogData, UserBlogData } from "@/lib/types/blog.types";
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000/api";
+const isServer = typeof window === "undefined";
+
+const BASE_URL = isServer 
+    ? (process.env.BASE_URL || "http://localhost:3000/api") 
+    : "/api";
 
 type UpdateBlogData = BlogData & {
     blogId: string;
@@ -51,13 +55,20 @@ export const getAllBlogs = async (userId: string) => {
 }
 
 // Service to get a single blog by its ID
-export const getBlog = async (blogId: string) => {
+export const getBlog = async (blogId: string, token?: string) => {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json"
+    };
+
+    if (token) {
+        headers["Cookie"] = `blogit-token=${token}`;
+    }
+
     const res = await fetch(`${BASE_URL}/blog/get-blog`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({ blogId }),
+        next: { revalidate: 60 },
     });
 
     const blogRes : ApiResponse<UserBlogData> = await res.json();

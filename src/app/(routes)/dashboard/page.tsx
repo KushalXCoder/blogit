@@ -7,7 +7,7 @@ import { BackgroundPattern } from "@/components/app-components/background-patter
 import { Button } from "@/components/ui/button";
 
 const Dashboard = async () => {
-    const token = (await cookies()).get("token")?.value;
+    const token = (await cookies()).get("blogit-token")?.value;
     const user = await checkToken(token);
 
     // Fetch all blogs for the user if the user is authenticated

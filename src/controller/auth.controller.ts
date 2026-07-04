@@ -43,7 +43,7 @@ export const loginController = async (req: NextRequest) => {
         res.cookies.set("blogit-token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "lax",
             path: "/",
             maxAge: 60 * 60 * 24 * 7
         });
@@ -79,10 +79,10 @@ export const signinController = async (req: NextRequest) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Creating the user in the database
-        await User.create({ username, email, password: hashedPassword });
+        const newUser = await User.create({ username, email, password: hashedPassword });
 
         // Create a token
-        const tokenData = getTokenData(exisitingUser);
+        const tokenData = getTokenData(newUser);
         const token = signToken(tokenData);
 
         // Set the token in an HTTP-only cookie
@@ -90,7 +90,7 @@ export const signinController = async (req: NextRequest) => {
         res.cookies.set("blogit-token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "lax",
             path: "/",
             maxAge: 60 * 60 * 24 * 7
         });
