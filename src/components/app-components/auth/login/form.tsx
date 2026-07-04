@@ -41,6 +41,7 @@ export const Form = () => {
           await login(data);
           toast("Login successful!");
           router.push("/");
+          router.refresh(); // So that client knows about the cookie
         } catch (error) {
           toast(error instanceof Error ? error.message : "Login failed. Please try again."); 
         }
