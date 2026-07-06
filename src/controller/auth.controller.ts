@@ -122,3 +122,20 @@ export const getImageKitCredentials = async (req: NextRequest) => {
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
     }
 }
+
+// Logic for handling user logout
+export const userLogout = async (req: NextRequest) => {
+    try {
+        // Clear the cookie
+        const res = NextResponse.json({ message: "Logout successful", data: true }, { status: 200 });
+        res.cookies.set("blogit-token", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+        });
+        
+        return res;
+    } catch (error) {
+        return NextResponse.json({ message: "Failed to logout user" }, { status: 500 });
+    }
+}
