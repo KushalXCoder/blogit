@@ -1,5 +1,6 @@
 // All the auth related frontend API calls to interact with the backend
 
+import { ApiResponse } from "@/lib/types/api.types";
 import { LoginData, SignUpData } from "@/lib/types/auth.types";
 
 // Sigin function
@@ -51,4 +52,22 @@ export const login = async (data: LoginData) => {
         console.error("Error logging in:", error);
         throw error;
     }
+}
+
+// Logout function
+export const userLogout = async () => {
+    const res = await fetch("/api/auth/logout", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+
+    const logoutData : ApiResponse<Boolean> = await res.json();
+    if(!res.ok) {
+        throw new Error(logoutData.message || "Failed to logout user");
+    }
+
+    return logoutData.data;
 }

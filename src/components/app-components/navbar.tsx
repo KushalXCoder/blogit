@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { Logo } from "./logo";
-import { Button } from "../ui/button";
+import { AuthButtons } from "./auth/auth-buttons";
+import { cookies } from "next/headers";
+import { LogoutButton } from "./auth/logout";
 
-export const Navbar = () => {
+export const Navbar = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("blogit-token")?.value;
   return (
     <nav className="w-full max-w-7xl mx-auto px-8 py-6 flex items-center justify-between relative">
       <Link
@@ -11,22 +15,7 @@ export const Navbar = () => {
       >
         <Logo />
       </Link>
-      <div className="flex items-center gap-4">
-        <Button
-          variant="link"
-          asChild
-          className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors p-0 h-auto cursor-pointer"
-        >
-          <Link href="/auth/signup">Sign Up</Link>
-        </Button>
-        <Button
-          variant="default"
-          asChild
-          className="px-6 py-2 rounded-full text-sm font-medium h-auto cursor-pointer"
-        >
-          <Link href="/auth/login">Login</Link>
-        </Button>
-      </div>
+      {token ? <LogoutButton /> : <AuthButtons />}
     </nav>
-  )
+  );
 };
