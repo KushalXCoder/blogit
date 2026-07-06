@@ -3,6 +3,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -18,6 +19,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
 import Link from "next/link";
+import { LogoutButton } from "./auth/logout";
 
 export const AppSidebar = () => {
   const router = useRouter();
@@ -64,6 +66,9 @@ export const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <LogoutButton />
+      </SidebarFooter>
     </Sidebar>
   )
 }
