@@ -1,14 +1,7 @@
 import { create } from 'zustand';
 import { UserData } from '../lib/types/user.types';
 
-type UserStoreType = Omit<UserData,"_id"> & {
-    loading: boolean;
-    setUser: (user: UserData) => void;
-    setValue: (key: keyof UserData, value: any) => void;
-    setLoading: (hydration: boolean) => void;
-};
-
-export const userStore = create<UserStoreType>((set) => ({
+const initialState = {
     username: '',
     email: '',
     image: '',
@@ -17,6 +10,18 @@ export const userStore = create<UserStoreType>((set) => ({
         hashnode: false,
     },
     loading: true,
+};
+
+type UserStoreType = Omit<UserData, "_id"> & {
+    loading: boolean;
+    setUser: (user: UserData) => void;
+    setValue: (key: keyof UserData, value: any) => void;
+    setLoading: (hydration: boolean) => void;
+    reset: () => void;
+};
+
+export const userStore = create<UserStoreType>((set) => ({
+    ...initialState,
     
     setUser: (user: UserData) => set(user),
     setLoading: (loading: boolean) => set({ loading }),
@@ -26,4 +31,5 @@ export const userStore = create<UserStoreType>((set) => ({
             [key]: value 
         }),
     ),
+    reset: () => set(initialState),
 }));
