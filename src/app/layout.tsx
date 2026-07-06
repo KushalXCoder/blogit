@@ -28,8 +28,11 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "blogit - Collaborative Document Editor",
-  description: "A collaborative document editor with the capabilities of RAG and AI.",
+  title: "Blogit",
+  description: "A centralised publishing platform to publish blogs at other places",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
