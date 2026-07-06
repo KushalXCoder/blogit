@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 import { userStore } from "@/store/user.store";
 import { getUserData } from "@/services/user.service";
@@ -23,6 +24,7 @@ export const Form = () => {
     const router = useRouter();
     const { setUser } = userStore();
 
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<SignUpData>({
         username: "",
         email: "",
@@ -44,6 +46,7 @@ export const Form = () => {
 
         console.log("Signup data:", data);
 
+        setLoading(true);
         // Handle signup logic here
         try {
           await signin(data);
@@ -51,14 +54,15 @@ export const Form = () => {
 
           // Fetch user data and update store client-side immediately
           const userData = await getUserData();
-          if (userData) {
-            setUser(userData);
-          }
+          if (userData) setUser(userData);
 
           // Redirect to dashboard using Server Action (which purges router cache)
           await redirectTo("/dashboard");
         } catch (error) {
+          // Ignore Next.js redirect errors as they are expected when performing server-side redirect
+          if (error instanceof Error && (error.message === "NEXT_REDIRECT" || error.message.includes("NEXT_REDIRECT"))) return;
           toast(error instanceof Error ? error.message : "Signup failed. Please try again.");
+          setLoading(false);
         }
     }
 
@@ -74,6 +78,7 @@ export const Form = () => {
                   onChange={handleChange}
                   placeholder="Enter your username"
                   required
+                  disabled={loading}
                 />
               </Field>
               <Field>
@@ -85,6 +90,7 @@ export const Form = () => {
                   onChange={handleChange}
                   placeholder="m@example.com"
                   required
+                  disabled={loading}
                 />
               </Field>
               <Field>
@@ -97,11 +103,14 @@ export const Form = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" value={data.password} onChange={handleChange} required />
+                <Input id="password" type="password" value={data.password} onChange={handleChange} required disabled={loading} />
               </Field>
               <Field>
-                <Button type="submit">Signup</Button>
-                <Button variant="outline" type="button">
+                <Button type="submit" disabled={loading} className="w-full justify-center">
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" />}
+                  Signup
+                </Button>
+                <Button variant="outline" type="button" disabled={loading} className="w-full justify-center">
                   Signup with Google
                 </Button>
                 <FieldDescription className="text-center">
