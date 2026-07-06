@@ -15,8 +15,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { userStore } from "@/store/user.store";
+import { getUserData } from "@/services/user.service";
+import { redirectTo } from "@/app/actions";
+
 export const Form = () => {
     const router = useRouter();
+    const { setUser } = userStore();
 
     const [data, setData] = useState<LoginData>({
         email: "",
@@ -40,8 +45,15 @@ export const Form = () => {
         try {
           await login(data);
           toast("Login successful!");
-          router.push("/");
-          router.refresh(); // So that client knows about the cookie
+          
+          // Fetch user data and update store client-side immediately
+          const userData = await getUserData();
+          if (userData) {
+            setUser(userData);
+          }
+
+          // Redirect to dashboard using Server Action (which purges router cache)
+          await redirectTo("/dashboard");
         } catch (error) {
           toast(error instanceof Error ? error.message : "Login failed. Please try again."); 
         }
