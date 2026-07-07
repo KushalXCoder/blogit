@@ -59,7 +59,7 @@ export const AppSidebar = () => {
               {sidebarItems.map((item) => (
                 <SidebarMenuItem key={item.name} className="mb-1">
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link href={item.url} prefetch={false}>
                       <Icon icon={item.icon} className="mr-2" />
                       <span>{item.name}</span>
                     </Link>
