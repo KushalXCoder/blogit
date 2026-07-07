@@ -6,12 +6,12 @@ import "@/app/globals.css";
 
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 import { Block } from "@blocknote/core";
 import { useEffect, useRef } from "react";
 
 const Editor = () => {
-  const { content, setDetails } = BlogStore();
+  const { content, setDetails } = blogStore();
   const initialInstance = useRef<Boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 

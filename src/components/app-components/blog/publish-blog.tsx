@@ -1,8 +1,18 @@
 import { Button } from "@/components/ui/button";
 
-export const PublishBlog = () => {
+type PublishBlogProps = {
+    loading: boolean;
+    setLoading: (val: boolean) => void;
+}
+
+export const PublishBlog = ({
+    loading,
+    setLoading
+} : PublishBlogProps) => {
     return (
-        <Button>
+        <Button
+            disabled={loading}
+        >
             Publish
         </Button>
     )

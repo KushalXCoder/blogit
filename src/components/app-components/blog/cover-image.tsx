@@ -1,14 +1,14 @@
 "use client";
 
 import { uploadImage } from "@/services/setting.service";
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useState } from "react";
 
 export const CoverImage = () => {
     const [uploading, setUploading] = useState<boolean>(false);
-    const { coverImage, setDetails } = BlogStore();
+    const { coverImage, setDetails } = blogStore();
 
     // Handle the local image upload
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -3,7 +3,7 @@
 import { BackNavigation } from "../back-nav";
 import { BlogContent } from "../blog/blog-content";
 import { useEffect, useState } from "react";
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 import Loading from "../blog/loading";
 import { UpdateBlog } from "./update-blog";
 import { UserBlogData } from "@/lib/types/blog.types";
@@ -18,7 +18,7 @@ export const EditBlogPage = ({
     blogData
 } : EditBlogPageProps) => {
     const [loading, setLoading] = useState<boolean>(true);
-    const { setDetails } = BlogStore();
+    const { setDetails } = blogStore();
 
     // const getBlogData = async (blogId: string) => {
     //     try {

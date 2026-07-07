@@ -1,7 +1,7 @@
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 
 export const BlogFooter = () => {
-    const { words, readingTime, title } = BlogStore();
+    const { words, readingTime, title } = blogStore();
     return (
         <div className="sticky bottom-0 w-full flex justify-between items-center px-10 py-1 border-y border-dashed z-10 bg-white">
             <div className="flex items-center gap-2 text-gray-600">

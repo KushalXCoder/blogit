@@ -1,7 +1,7 @@
 "use client";
 
 import { getBlog } from "@/services/blog.service";
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Loading from "../blog/loading";
@@ -17,7 +17,7 @@ export const ViewBlogPage = ({
     blogId
 } : ViewBlogPageProps) => {
     const [loading, setLoading] = useState<boolean>(true);
-    const { setDetails } = BlogStore();
+    const { setDetails } = blogStore();
 
     const getBlogData = async (blogId: string) => {
         try {

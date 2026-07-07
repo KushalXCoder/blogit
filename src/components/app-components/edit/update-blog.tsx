@@ -4,7 +4,7 @@
 
 import { Button } from "@/components/ui/button"
 import { updateBlog } from "@/services/blog.service";
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 import { useCreateBlockNote } from "@blocknote/react";
 import { toast } from "sonner";
 
@@ -15,7 +15,7 @@ type UpdateBlogProps = {
 export const UpdateBlog = ({
     blogId
 } : UpdateBlogProps) => {
-    const { title, coverImage, content, words } = BlogStore();
+    const { title, coverImage, content, words } = blogStore();
 
     const handleUpdate = async () => {
         try {

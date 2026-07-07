@@ -2,11 +2,11 @@
 
 import { Editor } from "@/components/app-components/blog/editor/dynamic-editor";
 import { BlogFooter } from "./blog-footer";
-import { BlogStore } from "@/store/blog.store";
+import { blogStore } from "@/store/blog.store";
 import { CoverImage } from "./cover-image";
 
 export const BlogContent = () => {
-    const { title, setDetails } = BlogStore();
+    const { title, setDetails } = blogStore();
     return (
         <div className="flex-1 flex flex-col">
             <CoverImage />
