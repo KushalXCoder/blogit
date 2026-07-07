@@ -15,18 +15,18 @@ export const Logo = ({
 }: LogoProps) => {
   return (
     <Link href="/" className="flex items-center gap-2">
-    <Image
-        src="/logo.svg"
-        alt="Logo"
-        height={1000}
-        width={1000}
-        priority
-        draggable={false}
-        className={cn("size-8", iconClassname)}
-    />
-    {includeText && (
-        <h1 className={cn("text-3xl font-serif tracking-tight",className)}>Blogit</h1>
-    )}
+      <Image
+          src="/logo.svg"
+          alt="Logo"
+          height={1000}
+          width={1000}
+          priority
+          draggable={false}
+          className={cn("size-8", iconClassname)}
+      />
+      {includeText && (
+          <h1 className={cn("text-3xl font-serif tracking-tight",className)}>Blogit</h1>
+      )}
     </Link>
   );
 };
