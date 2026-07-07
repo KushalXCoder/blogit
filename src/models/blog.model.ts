@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { User } from './user.model';
 
 const blogSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: User.modelName,
         required: true
     },
     title: {

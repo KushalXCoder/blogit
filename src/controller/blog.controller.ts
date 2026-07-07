@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkToken } from "@/lib/helper/checkToken";
 import { Blog } from "@/models/blog.model";
+import { User } from "@/models/user.model";
 import { connectDb } from "@/lib/drivers/db";
 import { isUserAuthenticated } from "@/lib/middleware/auth";
-import { BlogData, UserBlogData } from "@/lib/types/blog.types";
+import { BlogData } from "@/lib/types/blog.types";
 
 const updateBlogFields = ["title", "coverImage", "content", "words"] as const;
 
