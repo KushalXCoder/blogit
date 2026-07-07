@@ -10,4 +10,6 @@ export type UserBlogData = BlogData & {
     user: string;
     tags: string[];
     status: "draft" | "published";
-};
+    createdAt: string;
+    updatedAt: string;
+}
