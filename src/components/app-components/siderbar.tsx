@@ -20,9 +20,12 @@ import { useRouter } from "next/navigation";
 import { Logo } from "./logo";
 import Link from "next/link";
 import { LogoutButton } from "./auth/logout";
+import { blogStore } from "@/store/blog.store";
 
 export const AppSidebar = () => {
+  const { reset } = blogStore();
   const router = useRouter();
+
   const sidebarItems = [
     { name: "Blogs", url: "/dashboard", icon: DocFreeIcons },
     { name: 'Drafts', url: "/dashboard/drafts", icon: DocFreeIcons },
@@ -32,7 +35,8 @@ export const AppSidebar = () => {
   ];
 
   const handleClick = () => {
-    router.push("/create");
+    reset(); // Reset the user store state
+    router.push("/create"); // Redirect to the create page
   }
 
   return (
@@ -48,8 +52,8 @@ export const AppSidebar = () => {
         </Button>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup className="">
-          <SidebarGroupLabel className="">My Workspaces</SidebarGroupLabel>
+        <SidebarGroup>
+          <SidebarGroupLabel>My Workspaces</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.map((item) => (
