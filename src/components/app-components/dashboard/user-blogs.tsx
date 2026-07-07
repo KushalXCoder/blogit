@@ -1,7 +1,7 @@
 "use client";
 
 import { UserBlogData } from "@/lib/types/blog.types";
-import { Calendar, Clock, Pencil, Trash2, Eye, FileText } from "lucide-react";
+import { Calendar, Clock, Pencil, Eye } from "lucide-react";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
@@ -14,7 +14,6 @@ type UserBlogsProps = {
   blogs: UserBlogData[];
 };
 
-// Status -> ribbon color. Kept as a map so adding a new status later is a one-line change.
 const ribbon_status: Record<"draft" | "published", string> = {
   published: "bg-emerald-600 text-emerald-50",
   draft: "bg-amber-500 text-amber-50",
@@ -26,7 +25,7 @@ const formatWordCount = (words: number) => {
 };
 
 const BlogCard = ({ blog }: { blog: UserBlogData }) => {
-  const createdAt = new Date(parseInt(blog._id.substring(0, 8), 16) * 1000);
+  const time = blog.updatedAt;
   const readMinutes = Math.max(1, Math.ceil(blog.words / 200));
 
   const router = useRouter();
@@ -40,7 +39,7 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
       <div className="absolute right-0 top-0 h-20 w-20 overflow-hidden">
         <div
           className={cn(
-            "absolute right-[-32px] top-[10px] w-[120px] rotate-45 py-1 text-center text-[10px] font-semibold uppercase tracking-wide shadow-sm",
+            "absolute -right-8 top-2.5 w-30 rotate-45 py-1 text-center text-[10px] font-semibold uppercase tracking-wide shadow-sm",
             ribbon_status[blog.status],
           )}
         >
@@ -51,7 +50,7 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
       <CardContent className="px-5 pb-0 pt-4">
         <div className="mb-2 flex items-center gap-2 pr-10 text-xs text-muted-foreground">
           <Calendar className="h-3.5 w-3.5 shrink-0" />
-          <span>{formatDistanceToNow(createdAt, { addSuffix: true })}</span>
+          <span>{formatDistanceToNow(new Date(time), { addSuffix: true })}</span>
           <span className="h-1 w-1 shrink-0 rounded-full bg-muted-foreground/60" />
           <Clock className="h-3.5 w-3.5 shrink-0" />
           <span>{readMinutes} min read</span>
@@ -79,32 +78,31 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
         <span className="font-mono text-xs text-muted-foreground">
           {formatWordCount(blog.words)} words
         </span>
-
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           <TooltipRenderer text="Edit blog">
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-1.5 px-2 text-xs hover:bg-primary/10 hover:text-primary"
+              className="h-8 hover:bg-primary/10"
               onClick={() => router.push(`/edit/${blog._id}`)}
             >
-              <Pencil className="h-3.5 w-3.5" />
-              Edit
+              <span className="flex items-center gap-1.5 text-xs">
+                <Pencil className="h-3.5 w-3.5" />
+                Edit
+              </span>
             </Button>
           </TooltipRenderer>
           <TooltipRenderer text="View blog">
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-8 w-8 hover:bg-primary/10"
               onClick={() => router.push(`/view/${blog._id}`)}
             >
               <Eye className="h-4 w-4" />
             </Button>
           </TooltipRenderer>
-          <TooltipRenderer text="Delete">
-            <DeleteBox blogId={blog._id} />
-          </TooltipRenderer>
+          <DeleteBox blogId={blog._id} />
         </div>
       </CardFooter>
     </div>

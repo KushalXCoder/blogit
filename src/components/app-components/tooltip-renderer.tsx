@@ -2,7 +2,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type TooltipRendererProps = {
     text: string;
-    children?: React.ReactNode;
+    children: React.ReactElement;
 };
 
 export const TooltipRenderer = ({
@@ -11,7 +11,7 @@ export const TooltipRenderer = ({
 } : TooltipRendererProps) => {
     return (
         <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
                 {children}
             </TooltipTrigger>
             <TooltipContent>

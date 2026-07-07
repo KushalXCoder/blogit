@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -17,6 +17,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Loader } from "./loader";
 
 type DeleteBoxProps = {
     blogId: string;
@@ -26,33 +27,34 @@ export function DeleteBox({
     blogId
 }: DeleteBoxProps) {
   const [open, setOpen] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
+
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setMsg("");
     setText(val);
-
-    if(val.trim() === "Delete my blog") setIsDisabled(false);
-    else setIsDisabled(true);
   };
 
   const handleDelete = async () => {
+    setLoading(true);
+
     try {
         await deleteBlog(blogId);
-        toast.success("Blog deleted successfully");
-        setOpen(false);
         // Reset states
         setText("");
-        setIsDisabled(true);
         // Refresh the whole page 
         router.refresh();
     } catch (error) {
         console.log(error instanceof Error ? error.message : error);
         toast.error(error instanceof Error ? error.message : "Error deleting blog");
+    } finally {
+      setLoading(false);
+      toast.success("Blog deleted successfully");
+      setOpen(false);
     }
   };
 
@@ -61,22 +63,28 @@ export function DeleteBox({
     if (!isOpen) {
       // Reset input when dialog closes
       setText("");
-      setIsDisabled(true);
       setMsg("");
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
-        >
-            <HugeiconsIcon icon={Trash2} className="size-4" />
-        </Button>
-      </DialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <HugeiconsIcon icon={Trash2} className="size-4" />
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="font-heading">Delete</p>
+        </TooltipContent>
+      </Tooltip>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-bold">Delete Blog</DialogTitle>
@@ -96,6 +104,7 @@ export function DeleteBox({
               value={text}
               onChange={(e) => handleChange(e)}
               required
+              disabled={loading}
             />
           </div>
           {msg && <p className="text-sm text-destructive/80">{msg}</p>}
@@ -103,8 +112,9 @@ export function DeleteBox({
         <DialogFooter className="sm:justify-start">
             <Button
                 onClick={handleDelete}
-                disabled={isDisabled}
+                disabled={text.trim() !== "Delete my blog" || loading}
             >
+                {loading && <Loader />}
                 Delete
             </Button>
         </DialogFooter>
