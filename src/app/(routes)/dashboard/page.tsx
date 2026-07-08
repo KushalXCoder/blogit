@@ -13,7 +13,11 @@ const Dashboard = async () => {
     // Fetch all blogs for the user if the user is authenticated
     let blogs: UserBlogData[] | undefined = [];
     if (user) {
-        blogs = await getAllBlogs(user._id);
+        try {
+            blogs = await getAllBlogs(user._id);
+        } catch (error) {
+            console.error("Error fetching blogs:", error);
+        }
     }
 
     return (
@@ -27,7 +31,7 @@ const Dashboard = async () => {
                         <div className="flex flex-col gap-1 bg-accent/50 p-10 rounded-lg">
                             <h1 className="text-2xl font-bold text-gray-800">Opps!</h1>
                             <p className="text-gray-500 text-lg">
-                                No blogs found. Get started by creating your first blog!
+                                Get started by creating your first blog!
                             </p>
                             <Button variant="default" className="mt-3 py-3">
                                 Start your journey
