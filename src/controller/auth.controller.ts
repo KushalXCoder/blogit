@@ -58,8 +58,6 @@ export const loginController = async (req: NextRequest) => {
 export const signinController = async (req: NextRequest) => {
     try {
         const { username, email, password } = await req.json();
-        console.log("Received signup data:", username, email, password);
-
         if(!username || !email || !password) {
             return NextResponse.json({ message: "All fields are required" }, { status: 400 });
         }

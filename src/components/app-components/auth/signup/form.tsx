@@ -44,8 +44,6 @@ export const Form = () => {
         const { username, email, password } = data;
         if(!username || !email || !password) return;
 
-        console.log("Signup data:", data);
-
         setLoading(true);
         // Handle signup logic here
         try {
