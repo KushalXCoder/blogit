@@ -59,10 +59,6 @@ export const getAllBlogs = async (req: NextRequest) => {
         await connectDb();
 
         const blogs = await Blog.find({ user: userId }).select("-content");
-        if (!blogs || blogs.length === 0) {
-            return NextResponse.json({ message: "No blogs found" }, { status: 404 });
-        }
-
         return NextResponse.json({ message: "Blogs fetched successfully", data: blogs }, { status: 200 });
 
     } catch (error) {
