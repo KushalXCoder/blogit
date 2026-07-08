@@ -51,9 +51,20 @@ export const saveDraft = async (req: NextRequest) => {
 // Controller to get all blogs for the user
 export const getAllBlogs = async (req: NextRequest) => {
     try {
+        const user = await isUserAuthenticated(req);
+        if (!user.authenticated) {
+            return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+        }
+
+        const decoded = user.data;
+
         const { userId } = await req.json();
         if (!userId) {
             return NextResponse.json({ message: "User ID is required" }, { status: 400 });
+        }
+
+        if (decoded._id !== userId) {
+            return NextResponse.json({ message: "Not authorized to access this data" }, { status: 403 });
         }
 
         await connectDb();
@@ -189,6 +200,45 @@ export const deleteBlog = async (req: NextRequest) => {
         return NextResponse.json({ message: "Blog deleted successfully", data: true }, { status: 200 });
     } catch (error) {
         console.error("Error deleting blog:", error);
+        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    }
+}
+
+// Controller to fetch next blogs based on last blog id from the pagination
+export const getNextBlogs = async (req: NextRequest) => {
+    try {
+        const user = await isUserAuthenticated(req);
+        if(!user.authenticated) {
+            return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+        }
+
+        const decoded = user.data;
+
+        const { userId, lastBlogId } = await req.json();
+        if(!userId && !lastBlogId) {
+            return NextResponse.json({ message: "User ID and last blog ID are required" }, { status: 400 });
+        }
+
+        if(decoded._id !== userId) {
+            return NextResponse.json({ message: "Not authorized to access this data" }, { status: 403 });
+        }
+
+        await connectDb();
+
+        const isFirstPage = !lastBlogId || lastBlogId === "first";
+        const query = {
+            user: userId,
+            ...(isFirstPage ? {} : { _id: { $gt: lastBlogId } })
+        };
+
+        const blogs = await Blog.find(query)
+            .select("-content")
+            .sort({ _id: 1 })
+            .limit(10);
+
+        return NextResponse.json({ message: "Blogs fetched successfully", data: blogs }, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching next blogs:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }

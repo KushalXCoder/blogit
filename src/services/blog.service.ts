@@ -37,21 +37,50 @@ export const saveDraft = async ({
 }
 
 // Service to get all blogs for the user
-export const getAllBlogs = async (userId: string) => {
+export const getAllBlogs = async (userId: string, token?: string) => {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+    };
+
+    if (token) {
+        headers["Cookie"] = `blogit-token=${token}`;
+    }
+
     const res = await fetch(`${BASE_URL}/blog/get-all-blogs`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({ userId }),
     });
 
     const blogsRes : ApiResponse<UserBlogData[]> = await res.json();
     if(!res.ok) {
-        throw new Error("Failed to fetch blogs");
+        throw new Error(blogsRes.message || "Failed to fetch blogs");
     }
 
     return blogsRes.data;
+}
+
+export const getNextBlogs = async (userId: string, lastBlogId: string, token?: string) => {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+    };
+
+    if (token) {
+        headers["Cookie"] = `blogit-token=${token}`;
+    }
+
+    const res = await fetch(`${BASE_URL}/blog/get/next-blogs`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ userId, lastBlogId }),
+    });
+
+    const blogRes: ApiResponse<UserBlogData[]> = await res.json();
+    if(!res.ok) {
+        throw new Error(blogRes.message || "Failed to fetch blogs");
+    }
+
+    return blogRes.data;
 }
 
 // Service to get a single blog by its ID
