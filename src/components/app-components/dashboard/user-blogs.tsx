@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { TooltipRenderer } from "../tooltip-renderer";
 import { useRouter } from "next/navigation";
 import { DeleteBox } from "../delete-box";
+import { BlogSearch } from "./search-blog";
+import { useState } from "react";
 
 type UserBlogsProps = {
   blogs: UserBlogData[];
@@ -46,7 +48,6 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
           {blog.status}
         </div>
       </div>
-
       <CardContent className="px-5 pb-0 pt-4">
         <div className="mb-2 flex items-center gap-2 pr-10 text-xs text-muted-foreground">
           <Calendar className="h-3.5 w-3.5 shrink-0" />
@@ -73,7 +74,6 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
           </div>
         )}
       </CardContent>
-
       <CardFooter className="flex items-center justify-between border-t border-border bg-muted/40 px-5 py-2.5">
         <span className="font-mono text-xs text-muted-foreground">
           {formatWordCount(blog.words)} words
@@ -110,17 +110,22 @@ const BlogCard = ({ blog }: { blog: UserBlogData }) => {
 };
 
 export const UserBlogs = ({ blogs }: UserBlogsProps) => {
+  const [filteredBlogs, setFilteredBlogs] = useState<UserBlogData[]>(blogs);
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">My blogs</h1>
-        <p className="mt-2 text-muted-foreground">
-          Manage and organize your content
-        </p>
+      <div className="flex max-sm:flex-col max-sm:gap-4 md:justify-between md:items-end mb-8">
+        <div className="w-1/2 max-sm:w-full">
+          <h1 className="text-3xl font-bold tracking-tight">My blogs</h1>
+          <p className="mt-1 text-muted-foreground">
+            Manage and organize your content
+          </p>
+        </div>
+        <BlogSearch blogs={blogs} setFilteredBlogs={setFilteredBlogs} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {blogs.map((blog) => (
+        {filteredBlogs.map((blog) => (
           <BlogCard key={blog._id} blog={blog} />
         ))}
       </div>
