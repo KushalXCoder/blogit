@@ -88,7 +88,7 @@ export const AppSidebar = () => {
   };
 
   return (
-    <Sidebar className="sticky h-full px-2 py-3 border-dashed">
+    <Sidebar className="px-2 py-3 border-dashed">
       <SidebarHeader className="flex justify-between space-y-2">
         <div className="flex justify-between items-center">
           <Logo className="text-2xl" iconClassname="size-7" />
