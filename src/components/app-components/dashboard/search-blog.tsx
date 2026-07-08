@@ -5,13 +5,16 @@ import { useEffect, useState } from "react";
 type BlogSearchProps = {
     blogs: UserBlogData[];
     setFilteredBlogs: (blogs: UserBlogData[]) => void;
+    search: string;
+    setSearch: (text: string) => void;
 }
 
 export const BlogSearch = ({
     blogs,
-    setFilteredBlogs
+    setFilteredBlogs,
+    search,
+    setSearch
 }: BlogSearchProps) => {
-    const [search, setSearch] = useState<string>("");
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
@@ -27,10 +30,11 @@ export const BlogSearch = ({
             const filteredBlogs = blogs.filter(blog => {
                 return blog.title.toLowerCase().includes(search.toLowerCase());
             });
+            
             setFilteredBlogs(filteredBlogs);
         }, 300);
         return () => clearTimeout(timer);
-    }, [search]);
+    }, [search, blogs, setFilteredBlogs]);
 
     return (
         <Input
