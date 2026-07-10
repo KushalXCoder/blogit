@@ -19,7 +19,7 @@ export const saveDraft = async ({
     content,
     words
 } : BlogData) => {
-    const res = await fetch("/api/blog/save-draft", {
+    const res = await fetch("/api/blog/save/draft", {
         method: "POST",
         body: JSON.stringify({ title, coverImage, content, words }),
         headers: {
@@ -46,7 +46,7 @@ export const getAllBlogs = async (userId: string, token?: string) => {
         headers["Cookie"] = `blogit-token=${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}/blog/get-all-blogs`, {
+    const res = await fetch(`${BASE_URL}/blog/get/all-blogs`, {
         method: "POST",
         headers,
         body: JSON.stringify({ userId }),
@@ -93,7 +93,7 @@ export const getBlog = async (blogId: string, token?: string) => {
         headers["Cookie"] = `blogit-token=${token}`;
     }
 
-    const res = await fetch(`${BASE_URL}/blog/get-blog`, {
+    const res = await fetch(`${BASE_URL}/blog/get/blog-by-id`, {
         method: "POST",
         headers,
         body: JSON.stringify({ blogId }),
@@ -149,4 +149,22 @@ export const deleteBlog = async (
     }
 
     return deleteBlogData.data;
+}
+
+// Service to save the blog to database
+export const saveBlog = async (blogDetails: BlogData) => {
+    const res = await fetch("/api/blog/save/blog-to-db", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(blogDetails),
+    });
+
+    const saveBlogData : ApiResponse<Boolean> = await res.json();
+    if(!res.ok) {
+        throw new Error(saveBlogData.message || "Error saving blog");
+    }
+
+    return saveBlogData.data;
 }
