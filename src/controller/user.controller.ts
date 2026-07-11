@@ -6,6 +6,7 @@ import { User } from "@/models/user.model";
 import { signToken } from "@/lib/helper/signToken";
 import { getTokenData } from "@/lib/helper/getTokenData";
 import { isUserAuthenticated } from "@/lib/middleware/auth";
+import { upsertConnection } from "@/lib/helper/connections";
 
 type UserUpdatePayload = {
     updates: Partial<UserData>;
@@ -105,10 +106,11 @@ export const verifyDevtoKey = async (req: NextRequest) => {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
 
-        user.connections = {
-            ...user.connections,
-            devto: true,
-        };
+        user.connections = upsertConnection(user.connections, {
+            platform: "devto",
+            connected: true,
+            apiKey: devtoKey,
+        });
 
         await user.save();
 

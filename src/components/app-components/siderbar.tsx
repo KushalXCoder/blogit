@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { DocFreeIcons, GitGraph, Plus, Settings } from "@hugeicons/core-free-icons";
+import { DocFreeIcons, GitGraph, Github, Plus, Settings } from "@hugeicons/core-free-icons";
 import { Icon } from "./icon-renderer";
 import { Button } from "../ui/button";
 import { useRouter, usePathname } from "next/navigation";
@@ -25,6 +25,7 @@ import { userLogout } from "@/services/auth.service";
 import { redirectTo } from "@/app/actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { isPlatformConnected } from "@/lib/helper/connections";
 import {
   Avatar,
   AvatarImage,
@@ -47,6 +48,7 @@ import {
   User,
   Sparkles,
 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 export const AppSidebar = () => {
   const { reset: resetBlog } = blogStore();
@@ -142,7 +144,7 @@ export const AppSidebar = () => {
                     <span
                       className={cn(
                         "size-2 rounded-full transition-all duration-300",
-                        connections.devto ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
+                        isPlatformConnected(connections, "devto") ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
                       )}
                     />
                   </Link>
@@ -161,7 +163,7 @@ export const AppSidebar = () => {
                     <span
                       className={cn(
                         "size-2 rounded-full transition-all duration-300",
-                        connections.hashnode ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
+                        isPlatformConnected(connections, "hashnode") ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
                       )}
                     />
                   </Link>
@@ -178,17 +180,9 @@ export const AppSidebar = () => {
               <SidebarMenuItem className="mb-1">
                 <SidebarMenuButton asChild>
                   <a href="https://github.com/KushalXCoder/blogit" target="_blank" rel="noopener noreferrer">
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    <span>Documentation</span>
+                    <HugeiconsIcon icon={Github} />
+                    <span>Github</span>
                   </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem className="mb-1">
-                <SidebarMenuButton asChild>
-                  <Link href="/dashboard/settings">
-                    <HelpCircle className="mr-2 h-4 w-4" />
-                    <span>Help & Support</span>
-                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem className="mb-1">

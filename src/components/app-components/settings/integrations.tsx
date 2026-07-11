@@ -10,8 +10,8 @@ import { toast } from 'sonner';
 import { verifyDevtoKey } from '@/services/setting.service';
 import { IntegrationData } from '@/lib/types/global.types';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 import { userStore } from '@/store/user.store';
+import { isPlatformConnected } from '@/lib/helper/connections';
 
 type AccountIntegrationsProps = {
     integrationsData: IntegrationData;
@@ -20,16 +20,14 @@ type AccountIntegrationsProps = {
 export const AccountIntegrations = ({
     integrationsData
 }: AccountIntegrationsProps) => {
-    const { username, email, connections, setValue } = userStore();
+    const { setValue } = userStore();
     const { devtoKey, hashnodeKey, updateSettings } = settingsStore();
-
-    // Set default connections sync with the main store data
-    const [devkeyVerified, setDevKeyVerified] = useState<boolean>(connections.devto);
-    const [hashnodeKeyVerified, setHashnodeKeyVerified] = useState<boolean>(connections.hashnode);
+    const devtoConnected = isPlatformConnected(integrationsData, "devto");
+    const hashnodeConnected = isPlatformConnected(integrationsData, "hashnode");
 
     const handleDevVerify = async () => {
         // If already verified, do nothing
-        if(integrationsData.devto) return;
+        if(devtoConnected) return;
         
         // Check if field is empty
         if(!devtoKey) {
@@ -41,7 +39,6 @@ export const AccountIntegrations = ({
             const res = await verifyDevtoKey(devtoKey);
             if(res) {
                 toast.success("Dev.to key verified successfully!");
-                setDevKeyVerified(true); // Update the local state
                 setValue("connections", res.connections); // Update the main store
             }
         } catch (error) {
@@ -69,7 +66,7 @@ export const AccountIntegrations = ({
                                 onChange={(e) => updateSettings({ devtoKey: e.target.value })}
                                 placeholder='https://dev.to/summarecon'
                                 className='h-9'
-                                disabled={integrationsData.devto}
+                                disabled={devtoConnected}
                             />
                         </div>
                         <Button
@@ -77,11 +74,11 @@ export const AccountIntegrations = ({
                             variant="outline"
                             className={cn(
                                 'h-9 min-w-25',
-                                devkeyVerified || integrationsData.devto && "bg-green-500 cursor-not-allowed hover:bg-green-500"
+                                devtoConnected && "bg-green-500 cursor-not-allowed hover:bg-green-500"
                             )}
-                            disabled={integrationsData.devto}
+                            disabled={devtoConnected}
                         >
-                            {integrationsData.devto ? "Verified" : "Verify"}
+                            {devtoConnected ? "Verified" : "Verify"}
                         </Button>
                     </div>
                     <div className='space-y-2 min-w-100'>
@@ -104,11 +101,11 @@ export const AccountIntegrations = ({
                             variant="outline"
                             className={cn(
                                 'h-9 min-w-25',
-                                hashnodeKeyVerified && "bg-green-500"
+                                hashnodeConnected && "bg-green-500"
                             )}
-                            disabled={integrationsData.hashnode}
+                            disabled={hashnodeConnected}
                         >
-                            {integrationsData.hashnode ? "Verified" : "Verify"}
+                            {hashnodeConnected ? "Verified" : "Verify"}
                         </Button>
                     </div>
                 </div>

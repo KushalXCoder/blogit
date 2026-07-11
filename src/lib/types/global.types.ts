@@ -1,4 +1,4 @@
-import { UserData } from "./user.types";
+import { BlogPlatform } from "./blog.types";
 
 export type WaitlistData = {
     name: string;
@@ -7,8 +7,20 @@ export type WaitlistData = {
 };
 
 export type IntegrationData = {
-    devto: boolean;
-    hashnode: boolean;
-}
+    platform: BlogPlatform;
+    connected: boolean;
+    apiKey: string;
+}[];
 
-export type TokenData = UserData;
+export type TokenConnectionData = {
+    platform: BlogPlatform;
+    connected: boolean;
+}[];
+
+export type TokenData = {
+    _id: string;
+    email: string;
+    username: string;
+    image: string;
+    connections: TokenConnectionData;
+};
