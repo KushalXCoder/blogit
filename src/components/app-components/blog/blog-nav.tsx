@@ -1,7 +1,7 @@
 "use client";
 
 import { SaveDraft } from "./save-draft";
-import { PublishBlog } from "./publish-blog";
+import { PublishBlog } from "../publish/publish-blog";
 import { BackNavigation } from "../back-nav";
 import { useState } from "react";
 

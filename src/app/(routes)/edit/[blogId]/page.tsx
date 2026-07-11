@@ -16,11 +16,9 @@ const Page = async ({
     try {
         const token = (await cookies()).get("blogit-token")?.value;
         blogData = await getBlog(blogId, token);
-        console.log("Blog data fetched successfully:", blogData);
     } catch (error) {
         console.error("Error fetching blog data:", error);
     }
-
 
     if(!blogData) {
         return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor } from "@/components/app-components/blog/editor/dynamic-editor";
+import { Editor } from "@/components/app-components/editor/dynamic-editor";
 import { BlogFooter } from "./blog-footer";
 import { blogStore } from "@/store/blog.store";
 import { CoverImage } from "./cover-image";

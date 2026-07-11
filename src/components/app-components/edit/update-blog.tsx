@@ -8,18 +8,16 @@ import { blogStore } from "@/store/blog.store";
 import { useCreateBlockNote } from "@blocknote/react";
 import { toast } from "sonner";
 
-type UpdateBlogProps = {
-    blogId: string;
-};
+// type UpdateBlogProps = {
+//     blogId: string;
+// };
 
-export const UpdateBlog = ({
-    blogId
-} : UpdateBlogProps) => {
-    const { title, coverImage, content, words } = blogStore();
+export const UpdateBlog = () => {
+    const { id, title, coverImage, content, words } = blogStore();
 
     const handleUpdate = async () => {
         try {
-            const updateRes = await updateBlog({ blogId, title, coverImage, content, words });
+            const updateRes = await updateBlog({ blogId: id, title, coverImage, content, words });
             if(!updateRes) {
                 toast.error("Failed to update blog");
                 return;
@@ -33,7 +31,7 @@ export const UpdateBlog = ({
 
     return (
         <Button
-            variant="default"
+            variant="outline"
             className="px-5"
             onClick={handleUpdate}
         >

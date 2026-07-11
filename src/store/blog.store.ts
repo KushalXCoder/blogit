@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 const initialState = {
+    id: "",
     title: "",
     coverImage: "",
     content: "",
@@ -9,6 +10,7 @@ const initialState = {
 }
 
 type BlogStoreType = {
+    id: string;
     title: string;
     coverImage: string;
     content: string;
