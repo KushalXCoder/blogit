@@ -7,6 +7,7 @@ import { blogStore } from "@/store/blog.store";
 import Loading from "../blog/loading";
 import { UpdateBlog } from "./update-blog";
 import { UserBlogData } from "@/lib/types/blog.types";
+import { PublishBlog } from "../publish/publish-blog";
 
 type EditBlogPageProps = {
     blogId: string;
@@ -18,34 +19,12 @@ export const EditBlogPage = ({
     blogData
 } : EditBlogPageProps) => {
     const [loading, setLoading] = useState<boolean>(true);
+    const [publishing, setPublishing] = useState<boolean>(false);
     const { setDetails } = blogStore();
-
-    // const getBlogData = async (blogId: string) => {
-    //     try {
-    //         const res = await getBlog(blogId);
-    //         if(res) {
-    //             setDetails({
-    //                 title: res.title,
-    //                 coverImage: res.coverImage,
-    //                 content: res.content,
-    //                 words: res.words,
-    //             });
-    //         }
-    //         console.log("Blog data fetched successfully:", res);
-    //     } catch (error) {
-    //         console.error("Error fetching blog data:", error);
-    //         toast.error(error instanceof Error ? error.message : "An unexpected error occurred.");
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     getBlogData(blogId);    
-    // }, [blogId]);
 
     useEffect(() => {
         setDetails({
+            id: blogId,
             title: blogData.title,
             coverImage: blogData.coverImage,
             content: blogData.content,
@@ -60,7 +39,10 @@ export const EditBlogPage = ({
         <div className="min-h-screen flex flex-col border-dashed border-x bg-white pt-2 pb-5">
             <div className="flex justify-between items-center pt-3 pb-4 px-10">
                 <BackNavigation />
-                <UpdateBlog blogId={blogId} />
+                <div className="flex gap-3">
+                    <UpdateBlog />
+                    <PublishBlog loading={publishing} setLoading={setPublishing} />
+                </div>
             </div>
             <BlogContent />
         </div>

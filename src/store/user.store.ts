@@ -5,10 +5,7 @@ const initialState = {
     username: '',
     email: '',
     image: '',
-    connections: {
-        devto: false,
-        hashnode: false,
-    },
+    connections: [],
     loading: true,
 };
 

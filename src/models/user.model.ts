@@ -22,16 +22,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    connections: {
-        devto: {
-            type: Boolean,
-            default: false,
+    connections: [{
+        platform: {
+            type: String,
+            required: true,
+            enum: ["devto", "hashnode", "medium"]
         },
-        hashnode: {
+        connected: {
             type: Boolean,
-            default: false,
+            default: false
         },
-    }
+        apiKey: {
+            type: String,
+            default: ""
+        }
+    }]
 }, { timestamps: true });
 
 export const User = mongoose.models.User || mongoose.model("User", userSchema);
