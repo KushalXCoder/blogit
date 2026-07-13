@@ -6,6 +6,12 @@ export type WaitlistData = {
     receiveUpdates: boolean;
 };
 
+export type IntegrationDataType = {
+    platform: BlogPlatform;
+    connected: boolean;
+    apiKey: string;
+};
+
 export type IntegrationData = {
     platform: BlogPlatform;
     connected: boolean;
