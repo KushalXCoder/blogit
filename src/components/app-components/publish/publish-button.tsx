@@ -7,12 +7,14 @@ import { toast } from "sonner";
 import { publishBlog } from "@/services/blog.service";
 
 type PublishButtonProps = {
+    blogId: string;
     selectedPlatforms: Platform[];
     devtoForm: DevToFormState;
     hashnodeForm: HashnodeFormState;
 }
 
 export const PublishButton = ({
+    blogId,
     selectedPlatforms,
     devtoForm,
     hashnodeForm
@@ -24,8 +26,18 @@ export const PublishButton = ({
             toast.error("Title cannot be empty");
         }
 
+        // Convert string of tags for devto to an array of tags, limited to 4 tags
+        if(devtoForm.tagStream) {
+            const devtoTagsArray = devtoForm.tagStream.split(",")
+              .map(tag => tag.trim())
+              .filter(tag => tag !== "")
+              .slice(0, 4); // Limit to 4 tags
+
+            devtoForm.tags = devtoTagsArray;
+        }
+
         try {
-            const publishingData = await publishBlog(selectedPlatforms, devtoForm, hashnodeForm);
+            const publishingData = await publishBlog(blogId, selectedPlatforms, devtoForm, hashnodeForm);
             console.log("Publishing data:", publishingData);
             toast.success("Blog published successfully");
         } catch (error) {

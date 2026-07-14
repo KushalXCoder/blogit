@@ -33,7 +33,8 @@ export const PublishPage = ({
     title: data.title,
     body_markdown: data.content,
     published: true,
-    tags: "",
+    tagStream: "",
+    tags: [],
     main_image: data.coverImage,
     description: "",
     canonical_url: "",
@@ -69,11 +70,11 @@ export const PublishPage = ({
     setStep(2);
   };
 
-  const updateDevto = (k: keyof DevToFormState, v: string | boolean) =>
-    setDevtoForm((p) => ({ ...p, [k]: v }));
+  const updateDevto = (key: keyof DevToFormState, value: string | boolean) =>
+    setDevtoForm((p) => ({ ...p, [key]: value }));
 
-  const updateHashnode = (k: keyof HashnodeFormState, v: string | boolean) =>
-    setHashnodeForm((p) => ({ ...p, [k]: v }));
+  const updateHashnode = (key: keyof HashnodeFormState, value: string | boolean) =>
+    setHashnodeForm((p) => ({ ...p, [key]: value }));
 
   return (
     <div className="relative flex-1 w-full bg-background min-h-screen">
@@ -166,7 +167,12 @@ export const PublishPage = ({
                 <HugeiconsIcon icon={ArrowBigLeft} className="size-5" />
                 Back
               </Button>
-              <PublishButton selectedPlatforms={selectedPlatforms} devtoForm={devtoForm} hashnodeForm={hashnodeForm} />
+              <PublishButton
+                blogId={data._id}
+                selectedPlatforms={selectedPlatforms}
+                devtoForm={devtoForm}
+                hashnodeForm={hashnodeForm}
+              />
             </div>
           </div>
         )}

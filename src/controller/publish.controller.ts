@@ -16,17 +16,17 @@ export const publishBlog = async (req: NextRequest) => {
         const userId = auth.data._id;
 
         // Get the selected platforms and form data from the request body
-        const { selectedPlatforms, devtoForm, hashnodeForm } = await req.json();
+        const { blogId, selectedPlatforms, devtoForm, hashnodeForm } = await req.json();
         const platforms: BlogPlatform[] = selectedPlatforms;
 
-        if(!Array.isArray(platforms) || platforms.length === 0 || !devtoForm || !hashnodeForm) {
+        if(!blogId || !Array.isArray(platforms) || platforms.length === 0 || !devtoForm || !hashnodeForm) {
             return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
         }
         
         // Publish to the selected platforms using the respective publisher functions
         const publishTasks = platforms
             .filter((platform): platform is BlogPlatform => platform in platformPublishers)
-            .map((platform) => platformPublishers[platform]({ userId, devtoForm, hashnodeForm }));
+            .map((platform) => platformPublishers[platform]({ blogId, userId, devtoForm, hashnodeForm }));
 
         if (publishTasks.length === 0) {
             return NextResponse.json({ message: "No valid platforms selected" }, { status: 400 });

@@ -42,8 +42,8 @@ export function DevToForm({ formData, onChange }: DevToFormProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
           <FormField label="Tags" hint="Max 4, comma-separated">
             <Input
-              value={formData.tags}
-              onChange={(e) => onChange("tags", e.target.value)}
+              value={formData.tagStream}
+              onChange={(e) => onChange("tagStream", e.target.value)}
               placeholder="webdev, react"
             />
           </FormField>
@@ -54,13 +54,6 @@ export function DevToForm({ formData, onChange }: DevToFormProps) {
               placeholder="https://..."
             />
           </FormField>
-          {/* <FormField label="Description" hint="Short summary">
-            <Input
-              value={formData.description}
-              onChange={(e) => onChange("description", e.target.value)}
-              placeholder="Brief description..."
-            />
-          </FormField> */}
           <FormField label="Canonical URL" hint="SEO when cross-posting">
             <Input
               value={formData.canonical_url}
