@@ -178,6 +178,7 @@ export const saveBlog = async ({
 
 // Service to publish the blog to the selected platforms
 export const publishBlog = async (
+    blogId: string,
     selectedPlatforms: Platform[],
     devtoForm: DevToFormState,
     hashnodeForm: HashnodeFormState,
@@ -187,7 +188,7 @@ export const publishBlog = async (
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ selectedPlatforms, devtoForm, hashnodeForm }),
+        body: JSON.stringify({ blogId, selectedPlatforms, devtoForm, hashnodeForm }),
         credentials: "include"
     });
 

@@ -2,9 +2,11 @@ import { connectDb } from "@/lib/drivers/db";
 import { BlogPlatform } from "@/lib/types/blog.types";
 import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
 import { IntegrationDataType } from "@/lib/types/global.types";
+import { Blog } from "@/models/blog.model";
 import { User } from "@/models/user.model";
 
 type PublishInput = {
+    blogId: string;
     userId: string;
     devtoForm: DevToFormState;
     hashnodeForm: HashnodeFormState;
@@ -18,7 +20,7 @@ type PublishResult = {
 
 type PlatformPublisher = (input: PublishInput) => Promise<PublishResult>;
 
-export const publishToDevto = async (userId: string, devtoForm: DevToFormState): Promise<PublishResult> => {
+export const publishToDevto = async (blogId: string, userId: string, devtoForm: DevToFormState): Promise<PublishResult> => {
     if (!devtoForm.title.trim() || !devtoForm.body_markdown.trim()) {
         throw new Error("Dev.to title and content are required");
     }
@@ -51,6 +53,19 @@ export const publishToDevto = async (userId: string, devtoForm: DevToFormState):
         throw new Error(data.error || "Failed to publish on Dev.to");
     }
 
+    
+    // Modify the blog details after publishing it
+    const status = devtoForm.published ? "published" : "draft";
+    
+    const blog = await Blog.findByIdAndUpdate(blogId, {
+        $push: { published: "devto" },
+        $set: { status: status },
+    });
+
+    if(!blog) {
+        throw new Error("Error updating blog field");
+    }
+
     return {
         platform: "devto",
         success: true,
@@ -58,7 +73,7 @@ export const publishToDevto = async (userId: string, devtoForm: DevToFormState):
     };
 };
 
-export const publishToHashnode = async (userId: string, hashnodeForm: HashnodeFormState): Promise<PublishResult> => {
+export const publishToHashnode = async (blogId: string, userId: string, hashnodeForm: HashnodeFormState): Promise<PublishResult> => {
     if (!hashnodeForm.title.trim() || !hashnodeForm.markdown.trim()) {
         throw new Error("Hashnode title and content are required");
     }
@@ -72,6 +87,6 @@ export const publishToHashnode = async (userId: string, hashnodeForm: HashnodeFo
 };
 
 export const platformPublishers: Record<BlogPlatform, PlatformPublisher> = {
-    devto: ({ userId, devtoForm }) => publishToDevto(userId, devtoForm),
-    hashnode: ({ userId, hashnodeForm }) => publishToHashnode(userId, hashnodeForm),
+    devto: ({ blogId, userId, devtoForm }) => publishToDevto(blogId, userId, devtoForm),
+    hashnode: ({ blogId, userId, hashnodeForm }) => publishToHashnode(blogId, userId, hashnodeForm),
 };
