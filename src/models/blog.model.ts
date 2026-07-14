@@ -12,6 +12,7 @@ const blogSchema = new mongoose.Schema({
     },
     coverImage: {
         type: String,
+        default: ""
     },
     content: {
         type: String,
