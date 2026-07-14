@@ -148,14 +148,10 @@ export const updateBlog = async (req: NextRequest) => {
             return NextResponse.json({ message: "Not authorized to update this blog" }, { status: 403 });
         }
 
-        const newBlogData: BlogData = { title, coverImage, content, words };
-
-        for (const field of updateBlogFields) {
-            if (blog[field] !== undefined && blog[field] !== null
-                && blog[field] !== newBlogData[field]) {
-                blog[field] = newBlogData[field];
-            }
-        }
+        blog.title = title;
+        blog.coverImage = coverImage;
+        blog.content = content;
+        blog.words = words;
 
         await blog.save();
         return NextResponse.json({ message: "Blog updated successfully", data: true }, { status: 200 });
@@ -259,6 +255,7 @@ export const saveBlog = async (req: NextRequest) => {
         await connectDb();
 
         const blog = await Blog.create({
+            user: user.data._id,
             title,
             content,
             coverImage,
