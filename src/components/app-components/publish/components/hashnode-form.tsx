@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { FormSection, RequiredSection, OptionalSection, FormField, BoolField } from "./form-fields";
 import { HashnodeFormState } from "@/lib/types/form.types";
 
@@ -19,11 +18,11 @@ export function HashnodeForm({ formData, onChange }: HashnodeFormProps) {
             placeholder="Your blog title"
           />
         </FormField>
-        <FormField label="Markdown Content" hint="Auto-filled from your editor">
+        <FormField label="Markdown Content" hint="Auto-filled from your editor — no edits needed.">
           <Input
             value="Content from editor"
             disabled
-            className="text-muted-foreground bg-muted/50"
+            className="text-muted-foreground bg-muted/30 border-dashed"
           />
         </FormField>
         <FormField label="Publication ID" hint="Your Hashnode publication ID">
@@ -35,10 +34,8 @@ export function HashnodeForm({ formData, onChange }: HashnodeFormProps) {
         </FormField>
       </RequiredSection>
 
-      <Separator />
-
       <OptionalSection>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField label="Slug" hint="Custom URL">
             <Input
               value={formData.slug}
@@ -97,7 +94,7 @@ export function HashnodeForm({ formData, onChange }: HashnodeFormProps) {
           </FormField>
         </div>
 
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-1">
           <BoolField
             id="hn-disable-comments"
             label="Disable Comments"
