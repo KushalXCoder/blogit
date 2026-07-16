@@ -3,6 +3,7 @@ import { BlogPlatform } from "@/lib/types/blog.types";
 import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
 import { IntegrationDataType } from "@/lib/types/global.types";
 import { Blog } from "@/models/blog.model";
+import { DevtoPublishConfig } from "@/models/platform.model";
 import { User } from "@/models/user.model";
 
 type PublishInput = {
@@ -32,6 +33,24 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
         throw new Error("User doesn't exist.");
     }
 
+    const blog = await Blog.findById(blogId);
+    if(!blog) {
+        throw new Error("Blog doen't exist");
+    }
+
+    const devtoSettings = { list: devtoForm.tagStream, ...devtoForm };
+
+    // Save platform config for this blog
+    await DevtoPublishConfig.findOneAndUpdate({
+        user: userId,
+        blog: blogId,
+    }, {
+        settings: devtoSettings,
+    }, {
+        upsert: true,
+        new: true,
+    });
+
     const userDevtoAcc = user.connections.find((c: IntegrationDataType) => c.platform === "devto");
     if(!userDevtoAcc || !userDevtoAcc.apiKey) {
         throw new Error("You haven't connected your Dev.to account. Please connect your account first.");
@@ -39,6 +58,7 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
 
     const userDevtoKey = userDevtoAcc.apiKey;
 
+    // Post blog to devto
     const res = await fetch("https://dev.to/api/articles", {
         method: "POST",
         headers: {
@@ -57,14 +77,15 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
     // Modify the blog details after publishing it
     const status = devtoForm.published ? "published" : "draft";
     
-    const blog = await Blog.findByIdAndUpdate(blogId, {
-        $push: { published: "devto" },
-        $set: { status: status },
-    });
+    blog.published.push("devto");
+    blog.status = status;
 
-    if(!blog) {
-        throw new Error("Error updating blog field");
-    }
+    await blog.save();
+
+    // await Blog.findByIdAndUpdate(blogId, {
+    //     $push: { published: "devto" },
+    //     $set: { status: status },
+    // });
 
     return {
         platform: "devto",
