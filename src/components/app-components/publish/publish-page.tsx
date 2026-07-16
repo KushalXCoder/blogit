@@ -15,6 +15,8 @@ import { UserBlogData } from "@/lib/types/blog.types";
 import { PublishButton } from "./publish-button";
 import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
 import { isPlatformConnected } from "@/lib/helper/connections";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { AiChat } from "../ai/ai-chat";
 
 type PublishPageProps = {
   data: UserBlogData;
@@ -27,7 +29,7 @@ export const PublishPage = ({
 
   const [step, setStep] = useState<1 | 2>(1);
   const [selectedPlatforms, setSelectedPlatforms] = useState<Platform[]>([]);
-  const [activePlatform, setActivePlatform] = useState<Platform | null>(null);
+  const [activeTab, setActiveTab] = useState<Platform>("devto");
 
   const [devtoForm, setDevtoForm] = useState<DevToFormState>({
     title: data.title,
@@ -41,6 +43,7 @@ export const PublishPage = ({
     series: "",
     organization_id: "",
   });
+  
   const [hashnodeForm, setHashnodeForm] = useState<HashnodeFormState>({
     title: data.title,
     markdown: data.content,
@@ -66,113 +69,187 @@ export const PublishPage = ({
 
   const goToStep2 = () => {
     if (selectedPlatforms.length === 0) return;
-    setActivePlatform(selectedPlatforms[0]);
+    if (selectedPlatforms.includes("devto")) {
+      setActiveTab("devto");
+    } else if (selectedPlatforms.includes("hashnode")) {
+      setActiveTab("hashnode");
+    }
     setStep(2);
   };
 
-  const updateDevto = (key: keyof DevToFormState, value: string | boolean) =>
+  const updateDevto = (key: keyof DevToFormState, value: string | boolean) => {
     setDevtoForm((p) => ({ ...p, [key]: value }));
+  };
 
-  const updateHashnode = (key: keyof HashnodeFormState, value: string | boolean) =>
+  const updateHashnode = (key: keyof HashnodeFormState, value: string | boolean) => {
     setHashnodeForm((p) => ({ ...p, [key]: value }));
+  };
+
+  const getReadTime = () => {
+    const wordsCount = data.words || 0;
+    const minutes = Math.max(1, Math.round(wordsCount / 200));
+    return `${minutes} min read`;
+  };
+
+  const formattedDate = new Date().toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 
   return (
-    <div className="relative flex-1 w-full bg-background min-h-screen">
+    <div className="relative flex-1 w-full min-h-screen bg-transparent">
       <BackgroundPattern />
-      <div className="relative mx-auto max-w-4xl px-4 py-12">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground font-sans">Publish Blog</h1>
-          <p className="text-muted-foreground mt-1 font-sans">
-            Choose your platforms and fill in the publishing details.
-          </p>
-        </div>
+
+      <div className="relative w-full">
         {step === 1 && (
-          <div className="flex flex-col gap-6">
-            <p className="text-md text-muted-foreground font-sans">
-              Select the platforms you want to publish to. Disabled platforms have not been
-              connected yet — go to{" "}
-              <a href="/dashboard/settings" className="underline underline-offset-2 hover:text-foreground">
-                Settings
-              </a>{" "}
-              to connect them.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="px-8 py-10 max-w-5xl mx-auto">
+            <div className="mb-10 text-center md:text-left">
+              <span className="text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary px-3 py-1 rounded-full font-sans">
+                Workspace
+              </span>
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground font-sans mt-3">
+                Publishing Hub
+              </h1>
+              <p className="text-sm text-foreground/80 mt-2 font-sans max-w-xl">
+                Broadcasting your voice is simple. Select the channels where you want to publish this article.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
               <PlatformCard
                 platform="devto"
                 name="Dev.to"
-                description="Publish to the Dev.to developer community."
+                description="Publish to the global developer community."
                 connected={isPlatformConnected(connections, "devto")}
                 selected={selectedPlatforms.includes("devto")}
                 onToggle={() => togglePlatform("devto")}
                 logo={
-                  <Image src="/devto.webp" alt="Dev.to" width={28} height={28} className="rounded" />
+                  <Image src="/devto.webp" alt="Dev.to" width={36} height={36} className="rounded-lg shadow-sm" />
                 }
               />
               <PlatformCard
                 platform="hashnode"
                 name="Hashnode"
-                description="Share on your personal Hashnode blog."
+                description="Publish to your personal developer newsletter & blog."
                 connected={isPlatformConnected(connections, "hashnode")}
                 selected={selectedPlatforms.includes("hashnode")}
                 onToggle={() => togglePlatform("hashnode")}
                 logo={
-                  <span className="flex items-center justify-center w-7 h-7 rounded bg-blue-600 text-white text-xs font-bold font-sans">
+                  <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 text-white text-sm font-black font-sans shadow-sm">
                     H
                   </span>
                 }
               />
             </div>
 
-            <div className="flex justify-end pt-2">
+            {(!isPlatformConnected(connections, "devto") || !isPlatformConnected(connections, "hashnode")) && (
+              <div className="mt-8 flex items-center justify-start">
+                <a
+                  href="/dashboard/settings"
+                  className="text-xs font-semibold text-primary hover:underline font-sans"
+                >
+                  Manage Connections &rarr;
+                </a>
+              </div>
+            )}
+
+            <div className="mt-10 flex justify-end">
               <Button
+                size="lg"
                 onClick={goToStep2}
                 disabled={selectedPlatforms.length === 0}
+                className="px-8 shadow-md hover:translate-y-[-1px] transition-transform duration-200"
               >
-                Continue
-                <HugeiconsIcon icon={ArrowBigRight} className="size-5" />
+                Configure Forms
+                <HugeiconsIcon icon={ArrowBigRight} className="size-4 ml-2" />
               </Button>
             </div>
           </div>
         )}
-        {step === 2 && activePlatform && (
-          <div className="flex flex-col gap-6">
-            {/* Platform tab switcher (only shown when both selected) */}
-            {selectedPlatforms.length > 1 && (
-              <div className="flex gap-2 border-b border-border pb-0">
-                {selectedPlatforms.map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => setActivePlatform(p)}
-                    className={cn(
-                      "px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors font-sans",
-                      activePlatform === p
-                        ? "border-foreground text-foreground font-semibold"
-                        : "border-transparent text-muted-foreground hover:text-foreground"
-                    )}
+
+        {step === 2 && (
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_400px] min-h-screen">
+            <div className="px-8 py-6 border-r border-border/85 bg-transparent overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <div className="mb-3">
+                  <h1 className="text-xl font-bold tracking-tight text-foreground font-sans">
+                    Post details
+                  </h1>
+                  <p className="text-xs text-muted-foreground mt-0.5 font-sans font-medium">
+                    Customize headers, description, SEO options, and parameters.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setStep(1)} 
+                    className="gap-1.5 text-xs h-8 border-border/60 hover:bg-accent/40 bg-white dark:bg-black font-semibold"
                   >
-                    {p === "devto" ? "Dev.to" : "Hashnode"}
-                  </button>
-                ))}
+                    <HugeiconsIcon icon={ArrowBigLeft} className="size-3.5" />
+                    Back
+                  </Button>
+                  <PublishButton
+                    blogId={data._id}
+                    selectedPlatforms={selectedPlatforms}
+                    devtoForm={devtoForm}
+                    hashnodeForm={hashnodeForm}
+                  />
+                </div>
               </div>
-            )}
-            {activePlatform === "devto" && (
-              <DevToForm formData={devtoForm} onChange={updateDevto} />
-            )}
-            {activePlatform === "hashnode" && (
-              <HashnodeForm formData={hashnodeForm} onChange={updateHashnode} />
-            )}
-            <div className="flex items-center justify-between pt-2">
-              <Button variant="outline" onClick={() => setStep(1)}>
-                <HugeiconsIcon icon={ArrowBigLeft} className="size-5" />
-                Back
-              </Button>
-              <PublishButton
-                blogId={data._id}
-                selectedPlatforms={selectedPlatforms}
-                devtoForm={devtoForm}
-                hashnodeForm={hashnodeForm}
-              />
+
+              {selectedPlatforms.length === 1 ? (
+                <div className="space-y-6">
+                  {selectedPlatforms[0] === "devto" && (
+                    <DevToForm
+                      formData={devtoForm}
+                      onChange={updateDevto}
+                    />
+                  )}
+                  {selectedPlatforms[0] === "hashnode" && (
+                    <HashnodeForm
+                      formData={hashnodeForm}
+                      onChange={updateHashnode}
+                    />
+                  )}
+                </div>
+              ) : (
+                <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as Platform)} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/80 rounded-lg">
+                    {selectedPlatforms.map((platform) => (
+                      <TabsTrigger key={platform} value={platform} className="gap-2 text-sm py-1.5 font-semibold">
+                        {platform === "devto" ? (
+                          <Image src="/devto.webp" alt="" width={14} height={14} className="rounded-sm" />
+                        ) : (
+                          <span className="flex items-center justify-center w-3.5 h-3.5 rounded-sm bg-blue-600 text-white text-[7px] font-bold">H</span>
+                        )}
+                        {platform === "devto" ? "Dev.to" : "Hashnode"}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+
+                  {selectedPlatforms.includes("devto") && (
+                    <TabsContent value="devto" className="mt-6 space-y-6">
+                      <DevToForm
+                        formData={devtoForm}
+                        onChange={updateDevto}
+                      />
+                    </TabsContent>
+                  )}
+
+                  {selectedPlatforms.includes("hashnode") && (
+                    <TabsContent value="hashnode" className="mt-6 space-y-6">
+                      <HashnodeForm
+                        formData={hashnodeForm}
+                        onChange={updateHashnode}
+                      />
+                    </TabsContent>
+                  )}
+                </Tabs>
+              )}
+            </div>
+            <div className="bg-white">
+              <AiChat />
             </div>
           </div>
         )}
