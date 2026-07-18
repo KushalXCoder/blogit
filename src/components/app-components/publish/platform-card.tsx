@@ -2,28 +2,27 @@ import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-
-export type Platform = "devto" | "hashnode";
+import { BlogPlatform } from "@/lib/types/blog.types";
+import Image from "next/image";
 
 interface PlatformCardProps {
-  platform: Platform;
-  name: string;
+  platform: BlogPlatform;
   description: string;
   connected: boolean;
   selected: boolean;
   onToggle: () => void;
-  logo: React.ReactNode;
+  logo: string;
 }
 
 export function PlatformCard({
   platform,
-  name,
   description,
   connected,
   selected,
   onToggle,
   logo,
 }: PlatformCardProps) {
+  console.log(logo);
   return (
     <button
       type="button"
@@ -40,13 +39,21 @@ export function PlatformCard({
     >
       {/* Logo */}
       <div className="shrink-0 mt-0.5">
-        {logo}
+        <Image
+          src={logo}
+          alt={platform}
+          draggable={false}
+          height={1000}
+          width={1000}
+          loading="lazy"
+          className="size-5"
+        />
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-sm text-foreground">{name}</span>
+          <span className="font-medium text-sm text-foreground capitalize">{platform}</span>
           {!connected && (
             <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
               Not connected

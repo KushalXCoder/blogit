@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
-import { Platform } from "./components/platform-card";
 import { toast } from "sonner";
 import { publishBlog } from "@/services/blog.service";
+import { BlogPlatform } from "@/lib/types/blog.types";
 
 type PublishButtonProps = {
     blogId: string;
-    selectedPlatforms: Platform[];
+    selectedPlatforms: BlogPlatform[];
     devtoForm: DevToFormState;
     hashnodeForm: HashnodeFormState;
 }
