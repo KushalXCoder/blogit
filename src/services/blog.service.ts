@@ -1,8 +1,7 @@
 // All the blog related controllers will be here
 
-import { Platform } from "@/components/app-components/publish/components/platform-card";
 import { ApiResponse } from "@/lib/types/api.types";
-import { BlogData, UserBlogData } from "@/lib/types/blog.types";
+import { BlogData, BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
 import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
 
 const isServer = typeof window === "undefined";
@@ -179,7 +178,7 @@ export const saveBlog = async ({
 // Service to publish the blog to the selected platforms
 export const publishBlog = async (
     blogId: string,
-    selectedPlatforms: Platform[],
+    selectedPlatforms: BlogPlatform[],
     devtoForm: DevToFormState,
     hashnodeForm: HashnodeFormState,
 ) => {
