@@ -12,6 +12,7 @@ const blogSchema = new mongoose.Schema({
     },
     coverImage: {
         type: String,
+        default: ""
     },
     content: {
         type: String,
@@ -29,6 +30,10 @@ const blogSchema = new mongoose.Schema({
         enum: ["draft", "published"],
         default: "draft"
     },
+    published: {
+        type: Array,
+        default: []
+    }
 }, { timestamps: true });
 
 export const Blog = mongoose.models.Blog || mongoose.model('Blog', blogSchema);

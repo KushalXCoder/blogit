@@ -1,7 +1,7 @@
 "use client";
 
 import { userLogout } from "@/services/auth.service";
-import { Button } from "../../ui/button";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { redirectTo } from "@/app/actions";
 import { userStore } from "@/store/user.store";

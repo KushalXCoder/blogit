@@ -4,7 +4,7 @@ import { Blog } from "@/models/blog.model";
 import { User } from "@/models/user.model";
 import { connectDb } from "@/lib/drivers/db";
 import { isUserAuthenticated } from "@/lib/middleware/auth";
-import { BlogData } from "@/lib/types/blog.types";
+import { BlogData, BlogPlatform } from "@/lib/types/blog.types";
 
 const updateBlogFields = ["title", "coverImage", "content", "words"] as const;
 
@@ -148,14 +148,10 @@ export const updateBlog = async (req: NextRequest) => {
             return NextResponse.json({ message: "Not authorized to update this blog" }, { status: 403 });
         }
 
-        const newBlogData: BlogData = { title, coverImage, content, words };
-
-        for (const field of updateBlogFields) {
-            if (blog[field] !== undefined && blog[field] !== null
-                && blog[field] !== newBlogData[field]) {
-                blog[field] = newBlogData[field];
-            }
-        }
+        blog.title = title;
+        blog.coverImage = coverImage;
+        blog.content = content;
+        blog.words = words;
 
         await blog.save();
         return NextResponse.json({ message: "Blog updated successfully", data: true }, { status: 200 });
@@ -239,6 +235,36 @@ export const getNextBlogs = async (req: NextRequest) => {
         return NextResponse.json({ message: "Blogs fetched successfully", data: blogs }, { status: 200 });
     } catch (error) {
         console.error("Error fetching next blogs:", error);
+        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    }
+}
+
+// Controller to save blog to db
+export const saveBlog = async (req: NextRequest) => {
+    try {
+        const user = await isUserAuthenticated(req);
+        if(!user.authenticated) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 404 });
+        }
+
+        const { title, content, coverImage, words } = await req.json();
+        if(!title || !content || !words) {
+            return NextResponse.json({ message: "Missing blog details" }, { status: 400 });
+        }
+
+        await connectDb();
+
+        const blog = await Blog.create({
+            user: user.data._id,
+            title,
+            content,
+            coverImage,
+            words,
+        });
+
+        return NextResponse.json({ message: "Blog saved successfully", data: blog._id }, { status: 200 });
+    } catch (error) {
+        console.error("Internal server error:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }

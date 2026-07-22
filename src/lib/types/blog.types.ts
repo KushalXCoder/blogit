@@ -13,3 +13,5 @@ export type UserBlogData = BlogData & {
     createdAt: string;
     updatedAt: string;
 }
+
+export type BlogPlatform = "devto" | "hashnode";

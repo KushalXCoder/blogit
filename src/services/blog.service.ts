@@ -1,7 +1,9 @@
 // All the blog related controllers will be here
 
 import { ApiResponse } from "@/lib/types/api.types";
-import { BlogData, UserBlogData } from "@/lib/types/blog.types";
+import { BlogData, BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
+import { DevToFormState, HashnodeFormState } from "@/lib/types/platform.types";
+import { PublishButtonData, SelectedPlatformsData } from "@/lib/types/publish.types";
 
 const isServer = typeof window === "undefined";
 
@@ -152,19 +154,47 @@ export const deleteBlog = async (
 }
 
 // Service to save the blog to database
-export const saveBlog = async (blogDetails: BlogData) => {
+export const saveBlog = async ({
+    title,
+    coverImage,
+    content,
+    words
+} : BlogData) => {
     const res = await fetch("/api/blog/save/blog-to-db", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(blogDetails),
+        body: JSON.stringify({ title, coverImage, content, words }),
     });
 
-    const saveBlogData : ApiResponse<Boolean> = await res.json();
+    const saveBlogData : ApiResponse<string> = await res.json();
     if(!res.ok) {
         throw new Error(saveBlogData.message || "Error saving blog");
-    }
+  }
 
     return saveBlogData.data;
+}
+
+// Service to publish the blog to the selected platforms
+export const publishBlog = async (
+    blogId: string,
+    selectedPlatforms: BlogPlatform[],
+    selectedPlatformsData: SelectedPlatformsData,
+) => {
+    const res = await fetch("/api/blog/publish", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ blogId, selectedPlatforms, selectedPlatformsData }),
+        credentials: "include"
+    });
+
+    const publishingData = await res.json();
+    if(!res.ok) {
+        throw new Error(publishingData.message || "Failed to publish blog");
+    }
+
+    return publishingData;
 }

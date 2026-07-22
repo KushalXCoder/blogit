@@ -26,7 +26,7 @@ export const EditBlogPage = ({
         setDetails({
             id: blogId,
             title: blogData.title,
-            coverImage: blogData.coverImage,
+            coverImage: blogData.coverImage || "",
             content: blogData.content,
             words: blogData.words,
         })
