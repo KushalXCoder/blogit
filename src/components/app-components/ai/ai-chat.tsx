@@ -4,7 +4,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 
 export const AiChat = () => {
     return (
-        <div className="h-full flex flex-col bg-accent/50 p-5">
+        <div className="h-full w-full flex flex-col bg-accent/50 p-5">
             <div className="flex-1 flex justify-center items-center">    
                 <p className="font-serif text-2xl">
                     Ask AI about your blog
