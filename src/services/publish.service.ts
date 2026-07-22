@@ -1,16 +1,17 @@
 import { connectDb } from "@/lib/drivers/db";
 import { BlogPlatform } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
+import { DevToFormState, HashnodeFormState } from "@/lib/types/platform.types";
 import { IntegrationDataType } from "@/lib/types/global.types";
 import { Blog } from "@/models/blog.model";
 import { DevtoPublishConfig } from "@/models/platform.model";
 import { User } from "@/models/user.model";
 
+import { SelectedPlatformsData } from "@/lib/types/publish.types";
+
 type PublishInput = {
     blogId: string;
     userId: string;
-    devtoForm: DevToFormState;
-    hashnodeForm: HashnodeFormState;
+    formsData: SelectedPlatformsData;
 };
 
 type PublishResult = {
@@ -82,11 +83,6 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
 
     await blog.save();
 
-    // await Blog.findByIdAndUpdate(blogId, {
-    //     $push: { published: "devto" },
-    //     $set: { status: status },
-    // });
-
     return {
         platform: "devto",
         success: true,
@@ -99,7 +95,6 @@ export const publishToHashnode = async (blogId: string, userId: string, hashnode
         throw new Error("Hashnode title and content are required");
     }
 
-    // TODO: Replace with real Hashnode API integration.
     return {
         platform: "hashnode",
         success: true,
@@ -108,6 +103,6 @@ export const publishToHashnode = async (blogId: string, userId: string, hashnode
 };
 
 export const platformPublishers: Record<BlogPlatform, PlatformPublisher> = {
-    devto: ({ blogId, userId, devtoForm }) => publishToDevto(blogId, userId, devtoForm),
-    hashnode: ({ blogId, userId, hashnodeForm }) => publishToHashnode(blogId, userId, hashnodeForm),
+    devto: ({ blogId, userId, formsData }) => publishToDevto(blogId, userId, formsData.devto!),
+    hashnode: ({ blogId, userId, formsData }) => publishToHashnode(blogId, userId, formsData.hashnode!),
 };
