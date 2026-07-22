@@ -2,7 +2,8 @@
 
 import { ApiResponse } from "@/lib/types/api.types";
 import { BlogData, BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState } from "@/lib/types/form.types";
+import { DevToFormState, HashnodeFormState } from "@/lib/types/platform.types";
+import { PublishButtonData, SelectedPlatformsData } from "@/lib/types/publish.types";
 
 const isServer = typeof window === "undefined";
 
@@ -179,15 +180,14 @@ export const saveBlog = async ({
 export const publishBlog = async (
     blogId: string,
     selectedPlatforms: BlogPlatform[],
-    devtoForm: DevToFormState,
-    hashnodeForm: HashnodeFormState,
+    selectedPlatformsData: SelectedPlatformsData,
 ) => {
     const res = await fetch("/api/blog/publish", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ blogId, selectedPlatforms, devtoForm, hashnodeForm }),
+        body: JSON.stringify({ blogId, selectedPlatforms, selectedPlatformsData }),
         credentials: "include"
     });
 

@@ -188,3 +188,7 @@
 .bn-blog-editor .bn-editor {
   padding-inline: 0 !important;
 }
+
+.platform-settings {
+  scrollbar-width: none;
+}
