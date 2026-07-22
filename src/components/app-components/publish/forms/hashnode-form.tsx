@@ -1,13 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { FormSection, RequiredSection, OptionalSection, FormField, BoolField } from "./form-fields";
-import { HashnodeFormState } from "@/lib/types/form.types";
+import { HashnodeFormState } from "@/lib/types/platform.types";
+import { UserBlogData } from "@/lib/types/blog.types";
+import { useFormState } from "@/hooks/use-form-state";
 
 interface HashnodeFormProps {
-  formData: HashnodeFormState;
-  onChange: (key: keyof HashnodeFormState, value: string | boolean) => void;
+  data: UserBlogData;
 }
 
-export function HashnodeForm({ formData, onChange }: HashnodeFormProps) {
+export function HashnodeForm({
+  data
+}: HashnodeFormProps) {
+  const { getForm, setForm } = useFormState(data);
+  const formData = getForm("hashnode");
+  const onChange = (key: keyof HashnodeFormState, value: string | boolean) => {
+    setForm("hashnode", (prev) => ({ ...prev, [key]: value }));
+  };
   return (
     <FormSection>
       <RequiredSection>

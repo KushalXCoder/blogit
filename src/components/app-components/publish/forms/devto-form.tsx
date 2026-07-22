@@ -1,14 +1,20 @@
 import { Input } from "@/components/ui/input";
 import { FormSection, RequiredSection, OptionalSection, FormField, BoolField, DescriptiveField } from "./form-fields";
 import { Textarea } from "@/components/ui/textarea";
-import { DevToFormState } from "@/lib/types/form.types";
+import { DevToFormState } from "@/lib/types/platform.types";
+import { useFormState } from "@/hooks/use-form-state";
+import { UserBlogData } from "@/lib/types/blog.types";
 
 interface DevToFormProps {
-  formData: DevToFormState;
-  onChange: (key: keyof DevToFormState, value: string | boolean) => void;
+  data: UserBlogData;
 }
 
-export function DevToForm({ formData, onChange }: DevToFormProps) {
+export function DevToForm({ data }: DevToFormProps) {
+  const { getForm, setForm } = useFormState(data);
+  const formData = getForm("devto");
+  const onChange = (key: keyof DevToFormState, value: string | boolean) => {
+    setForm("devto", (prev) => ({ ...prev, [key]: value }));
+  };
   return (
     <FormSection>
       <RequiredSection>
