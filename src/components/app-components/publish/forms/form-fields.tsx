@@ -14,13 +14,13 @@ export function FormSection({ children }: { children: React.ReactNode }) {
 
 export function RequiredSection({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-5 w-full">
-      <div className="flex items-center gap-2 pb-1 border-b border-border/80">
+    <div className="flex flex-col gap-5 w-full bg-white dark:bg-card border border-border/80 rounded-xl p-6 shadow-xs">
+      <div className="flex items-center gap-2 pb-3 border-b border-border/60">
         <span className="text-xs font-bold uppercase tracking-wider text-foreground font-sans">
           Essential Settings
         </span>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 pt-1">
         {children}
       </div>
     </div>
@@ -29,13 +29,13 @@ export function RequiredSection({ children }: { children: React.ReactNode }) {
 
 export function OptionalSection({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-5 w-full">
-      <div className="flex items-center gap-2 pb-1 border-b border-border/80">
+    <div className="flex flex-col gap-5 w-full bg-white dark:bg-card border border-border/80 rounded-xl p-6 shadow-xs">
+      <div className="flex items-center gap-2 pb-3 border-b border-border/60">
         <span className="text-xs font-bold uppercase tracking-wider text-foreground/80 font-sans">
           Metadata & SEO (Optional)
         </span>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 pt-1">
         {children}
       </div>
     </div>

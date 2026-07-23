@@ -2,14 +2,13 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { userStore } from "@/store/user.store";
 import Image from "next/image";
 import { BackgroundPattern } from "../background-pattern";
 import { PlatformCard } from "./platform-card";
 import { DevToForm } from "./forms/devto-form";
 import { HashnodeForm } from "./forms/hashnode-form";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowBigLeft, ArrowBigRight } from "@hugeicons/core-free-icons";
 import { BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
 import { PublishButton } from "./publish-button";
 import { isPlatformConnected } from "@/lib/helper/connections";
@@ -19,49 +18,65 @@ import { all_platforms } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useFormState } from "@/hooks/use-form-state";
 import { FormStates } from "@/lib/types/platform.types";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 type PublishPageProps = {
   data: UserBlogData;
-}
+};
 
 type PlatformMetaData = {
   name: string;
   data: FormStates;
   logo: React.ReactNode;
-}
-
-const platform_notes : Record<BlogPlatform,string> = {
-  devto: "Publish to devto - an acclaimed blog platform of the tech world.",
-  hashnode: "Publish to hashnode - the modern blog platform of current times."
 };
 
-export const PublishPage = ({
-  data
-} : PublishPageProps) => {
+const platform_notes: Record<BlogPlatform, string> = {
+  devto: "Distribute to Dev.to — reach the developer community.",
+  hashnode: "Distribute to Hashnode — a modern blogging platform.",
+};
+
+export const PublishPage = ({ data }: PublishPageProps) => {
   const { connections } = userStore();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [selectedPlatforms, setSelectedPlatforms] = useState<BlogPlatform[]>([]);
-  const [activeTab, setActiveTab] = useState<BlogPlatform>(selectedPlatforms[0]);
+  const [activeTab, setActiveTab] = useState<BlogPlatform>("devto");
   const { forms, getForm } = useFormState(data);
 
   const platform_metadata: Record<BlogPlatform, PlatformMetaData> = {
     devto: {
-      name: "devto",
+      name: "Dev.to",
       data: getForm("devto"),
-      logo: <Image src="/devto.webp" alt="Dev.to" width={14} height={14} className="rounded-sm" />
+      logo: (
+        <Image
+          src="/devto.webp"
+          alt="Dev.to"
+          width={20}
+          height={20}
+          className="rounded-sm object-contain"
+        />
+      ),
     },
     hashnode: {
-      name: "hashnode",
+      name: "Hashnode",
       data: getForm("hashnode"),
-      logo: <span className="flex items-center justify-center w-3.5 h-3.5 rounded-sm bg-blue-600 text-white text-[7px] font-bold">H</span>
-    }
+      logo: (
+        <svg viewBox="0 0 39 39" className="w-5 h-5 fill-blue-600">
+          <path d="M2.68 13.032c-3.573 3.505-3.573 9.363 0 12.936L13.032 36.32c3.505 3.573 9.363 3.573 12.936 0L36.32 25.968c3.573-3.573 3.573-9.431 0-12.936L25.968 2.68c-3.573-3.573-9.431-3.573-12.936 0zm12.211 1.935c2.507-2.521 6.582-2.544 9.104-.038s2.544 6.582.038 9.104-6.582 2.544-9.104.038-2.544-6.582-.038-9.104" />
+        </svg>
+      ),
+    },
   };
 
   const togglePlatform = (p: BlogPlatform) => {
-    setSelectedPlatforms((prev) =>
-      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
-    );
+    setSelectedPlatforms((prev) => {
+      const next = prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p];
+      if (next.length > 0 && !next.includes(activeTab)) {
+        setActiveTab(next[0]);
+      }
+      return next;
+    });
   };
 
   const goToStep2 = () => {
@@ -70,123 +85,206 @@ export const PublishPage = ({
     setStep(2);
   };
 
-  const platformForms : Record<BlogPlatform, () => React.ReactNode> = {
+  const platformForms: Record<BlogPlatform, () => React.ReactNode> = {
     devto: () => <DevToForm data={data} />,
-    hashnode: () => <HashnodeForm data={data} />
+    hashnode: () => <HashnodeForm data={data} />,
   };
 
   const renderForm = (platform: BlogPlatform) => platformForms[platform]();
 
+  const hasDisconnected =
+    !isPlatformConnected(connections, "devto") ||
+    !isPlatformConnected(connections, "hashnode");
+
   return (
-    <div className={cn(
-      "relative flex-1 w-full bg-transparent",
-      step === 2 ? "h-screen overflow-hidden" : "min-h-screen"
-    )}>
+    <div
+      className={cn(
+        "relative flex-1 w-full bg-white",
+        step === 2 ? "h-screen overflow-hidden" : "min-h-screen",
+      )}
+    >
       <BackgroundPattern />
 
       <div className={cn("relative w-full", step === 2 && "h-full")}>
         {step === 1 && (
-          <div className="px-8 py-10 max-w-5xl mx-auto">
-            <div className="mb-10 text-center md:text-left">
-              <span className="text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary px-3 py-1 rounded-full font-sans">
-                Workspace
-              </span>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground font-sans mt-3">
-                Publishing Hub
-              </h1>
-              <p className="text-sm text-foreground/80 mt-2 font-sans max-w-xl">
-                Broadcasting your voice is simple. Select the channels where you want to publish this article.
+          <div className="max-w-5xl mx-auto px-6 py-10">
+            {/* Page header — matches the blogs dashboard pattern */}
+            <div className="mb-8">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+              >
+                <ArrowLeft className="size-3.5" />
+                Back to blogs
+              </Link>
+              <h1 className="text-3xl font-bold tracking-tight">Publish</h1>
+              <p className="mt-1 text-muted-foreground">
+                Select platforms and configure details for{" "}
+                <span className="text-foreground font-medium">
+                  {data.title || "Untitled"}
+                </span>
               </p>
             </div>
-            {/* Display all publish cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              {all_platforms.map((platform: BlogPlatform) => (
-                <PlatformCard
-                  key={platform}
-                  platform={platform}
-                  description={platform_notes[platform]}
-                  connected={isPlatformConnected(connections,platform)}
-                  selected={selectedPlatforms.includes(platform)}
-                  onToggle={() => togglePlatform(platform)}
-                  logo={`/${platform}.webp`}
-                />
-              ))}
-            </div>
-            <div className="flex justify-between items-end">    
-              {(!isPlatformConnected(connections, "devto") || !isPlatformConnected(connections, "hashnode")) && (
-                <div className="mt-8 flex items-center justify-start">
-                  <a
-                    href="/dashboard/settings"
-                    className="text-md hover:underline text-gray-500 hover:text-primary transition-colors"
-                  >
-                    Manage Connections
-                  </a>
+
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+              {/* Main column */}
+              <div>
+                <p className="text-sm font-medium text-foreground mb-3">
+                  Platforms
+                </p>
+                <div className="border border-border rounded-lg overflow-hidden divide-y divide-border bg-white">
+                  {all_platforms.map((platform: BlogPlatform) => (
+                    <PlatformCard
+                      key={platform}
+                      platform={platform}
+                      description={platform_notes[platform]}
+                      connected={isPlatformConnected(connections, platform)}
+                      selected={selectedPlatforms.includes(platform)}
+                      published={!!data.published?.includes(platform)}
+                      onToggle={() => togglePlatform(platform)}
+                      logo={platform_metadata[platform].logo}
+                    />
+                  ))}
                 </div>
-              )}
-              <div className="mt-10 flex justify-end">
-                <Button
-                  size="lg"
-                  onClick={goToStep2}
-                  disabled={selectedPlatforms.length === 0}
-                >
-                  Configure Forms
-                  <HugeiconsIcon icon={ArrowBigRight} className="size-4 ml-2" />
-                </Button>
+
+                {hasDisconnected && (
+                  <p className="text-[13px] text-muted-foreground mt-4">
+                    Some platforms are not connected.{" "}
+                    <Link
+                      href="/dashboard/settings"
+                      className="text-foreground underline underline-offset-4 hover:text-primary"
+                    >
+                      Manage connections
+                    </Link>
+                  </p>
+                )}
+              </div>
+
+              {/* Sidebar */}
+              <div>
+                <div className="sticky top-8">
+                  <p className="text-sm font-medium text-foreground mb-3">
+                    Summary
+                  </p>
+                  <div className="border border-border rounded-lg bg-white p-5">
+                    {selectedPlatforms.length === 0 ? (
+                      <p className="text-sm text-muted-foreground py-4">
+                        Select at least one platform to continue.
+                      </p>
+                    ) : (
+                      <div className="space-y-3">
+                        {selectedPlatforms.map((platform) => {
+                          const isUpdate = !!data.published?.includes(platform);
+                          return (
+                            <div
+                              key={platform}
+                              className="flex items-center justify-between"
+                            >
+                              <div className="flex items-center gap-2">
+                                <div className="shrink-0">
+                                  {platform_metadata[platform].logo}
+                                </div>
+                                <span className="text-sm font-medium">
+                                  {platform_metadata[platform].name}
+                                </span>
+                              </div>
+                              <span
+                                className={cn(
+                                  "text-xs font-medium",
+                                  isUpdate
+                                    ? "text-emerald-600"
+                                    : "text-muted-foreground",
+                                )}
+                              >
+                                {isUpdate ? "Update" : "New post"}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    <Separator className="my-4" />
+
+                    <Button
+                      className="w-full"
+                      onClick={goToStep2}
+                      disabled={selectedPlatforms.length === 0}
+                    >
+                      Continue
+                      <ArrowRight className="size-4 ml-1.5" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         )}
+
         {step === 2 && (
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_400px] h-full overflow-hidden">
-            <div className="platform-settings px-8 py-6 border-r border-border/85 bg-transparent overflow-y-auto h-full pb-16">
-              <div className="flex items-center justify-between mb-6">
-                <div className="mb-3">
-                  <h1 className="text-xl font-bold tracking-tight text-foreground font-sans">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] h-full overflow-hidden">
+            <div className="px-8 py-6 border-r border-border overflow-y-auto h-full pb-20" style={{ scrollbarWidth: "none" }}>
+              <div className="flex items-center justify-between mb-6 bg-white dark:bg-card p-5 rounded-xl border border-border/80 shadow-xs">
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight">
                     Post details
-                  </h1>
-                  <p className="text-xs text-muted-foreground mt-0.5 font-sans font-medium">
-                    Customize headers, description, SEO options, and parameters.
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Configure metadata for each platform.
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="ghost"
                     size="sm"
-                    onClick={() => setStep(1)} 
-                    className="gap-1.5 text-xs h-8 border-border/60 hover:bg-accent/40 bg-white dark:bg-black font-semibold"
+                    onClick={() => setStep(1)}
+                    className="gap-1.5 text-sm"
                   >
-                    <HugeiconsIcon icon={ArrowBigLeft} className="size-3.5" />
+                    <ArrowLeft className="size-3.5" />
                     Back
                   </Button>
                   <PublishButton
                     blogId={data._id}
                     selectedPlatforms={selectedPlatforms}
                     selectedPlatformsData={forms}
+                    published={data.published}
                   />
                 </div>
               </div>
+
               {selectedPlatforms.length === 1 ? (
-                <div className="space-y-6">
-                  {renderForm(selectedPlatforms[0])}
-                </div>
+                <div className="space-y-6">{renderForm(selectedPlatforms[0])}</div>
               ) : (
-                <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as BlogPlatform)} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/80 rounded-lg">
+                <Tabs
+                  value={activeTab}
+                  onValueChange={(val) => setActiveTab(val as BlogPlatform)}
+                  className="w-full"
+                >
+                  <TabsList className="mb-6 bg-white dark:bg-card border border-border/80 p-1.5 rounded-xl shadow-xs">
                     {selectedPlatforms.map((platform) => (
-                      <TabsTrigger key={platform} value={platform} className="gap-2 text-sm py-1.5 font-semibold">
+                      <TabsTrigger
+                        key={platform}
+                        value={platform}
+                        className="gap-2 text-sm px-4 py-1.5 font-medium rounded-lg"
+                      >
                         {platform_metadata[platform].logo}
                         {platform_metadata[platform].name}
                       </TabsTrigger>
                     ))}
                   </TabsList>
                   {selectedPlatforms.map((platform) => (
-                    <TabsContent key={platform} value={platform} className="mt-6 space-y-6">
+                    <TabsContent
+                      key={platform}
+                      value={platform}
+                      className="space-y-6"
+                    >
                       {renderForm(platform)}
                     </TabsContent>
                   ))}
                 </Tabs>
               )}
             </div>
+
             <div className="h-full bg-white">
               <AiChat />
             </div>
