@@ -21,9 +21,8 @@ export const AccountIntegrations = ({
     integrationsData
 }: AccountIntegrationsProps) => {
     const { setValue } = userStore();
-    const { devtoKey, hashnodeKey, updateSettings } = settingsStore();
+    const { devtoKey, updateSettings } = settingsStore();
     const devtoConnected = isPlatformConnected(integrationsData, "devto");
-    const hashnodeConnected = isPlatformConnected(integrationsData, "hashnode");
 
     const handleDevVerify = async () => {
         // If already verified, do nothing
@@ -79,33 +78,6 @@ export const AccountIntegrations = ({
                             disabled={devtoConnected}
                         >
                             {devtoConnected ? "Verified" : "Verify"}
-                        </Button>
-                    </div>
-                    <div className='space-y-2 min-w-100'>
-                        <div className='space-y-2'>
-                            <Label className='gap-2'>
-                                <svg viewBox='0 0 39 39' className='h-4'>
-                                    <path d="M2.68 13.032c-3.573 3.505-3.573 9.363 0 12.936L13.032 36.32c3.505 3.573 9.363 3.573 12.936 0L36.32 25.968c3.573-3.573 3.573-9.431 0-12.936L25.968 2.68c-3.573-3.573-9.431-3.573-12.936 0zm12.211 1.935c2.507-2.521 6.582-2.544 9.104-.038s2.544 6.582.038 9.104-6.582 2.544-9.104.038-2.544-6.582-.038-9.104"></path>
-                                </svg>
-                                Hashnode API
-                            </Label>
-                            <Input
-                                id='hashnodekey'
-                                value={hashnodeKey}
-                                onChange={(e) => updateSettings({ hashnodeKey: e.target.value })}
-                                placeholder='https://hashnode.com/summarecon'
-                                className='h-9'
-                            />
-                        </div>
-                        <Button
-                            variant="outline"
-                            className={cn(
-                                'h-9 min-w-25',
-                                hashnodeConnected && "bg-green-500"
-                            )}
-                            disabled={hashnodeConnected}
-                        >
-                            {hashnodeConnected ? "Verified" : "Verify"}
                         </Button>
                     </div>
                 </div>

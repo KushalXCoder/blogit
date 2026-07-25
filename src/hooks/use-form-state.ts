@@ -1,7 +1,7 @@
 "use client";
 
 import { UserBlogData } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState, PlatformFormStates } from "@/lib/types/platform.types";
+import { DevToFormState, PlatformFormStates } from "@/lib/types/platform.types";
 import { useFormStore } from "@/store/form.store";
 import React from "react";
 
@@ -20,22 +20,6 @@ export const initialFormStateCreators: {
         canonical_url: "",
         series: "",
         organization_id: "",
-    }),
-    hashnode: (data) => ({
-        title: data.title,
-        markdown: data.content,
-        publication_id: "",
-        slug: "",
-        subtitle: "",
-        cover_image: data.coverImage,
-        tags: "",
-        series: "",
-        seo_title: "",
-        seo_description: "",
-        canonical_url: "",
-        disable_comments: false,
-        hide_from_feed: false,
-        draft: false,
     }),
 };
 

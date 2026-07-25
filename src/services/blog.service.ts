@@ -2,7 +2,7 @@
 
 import { ApiResponse } from "@/lib/types/api.types";
 import { BlogData, BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState } from "@/lib/types/platform.types";
+import { DevToFormState } from "@/lib/types/platform.types";
 import { PublishButtonData, SelectedPlatformsData } from "@/lib/types/publish.types";
 
 const isServer = typeof window === "undefined";

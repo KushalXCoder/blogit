@@ -15,4 +15,4 @@ export type UserBlogData = BlogData & {
     updatedAt: string;
 }
 
-export type BlogPlatform = "devto" | "hashnode";
+export type BlogPlatform = "devto";

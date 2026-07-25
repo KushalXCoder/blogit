@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         platform: {
             type: String,
             required: true,
-            enum: ["devto", "hashnode", "medium"]
+            enum: ["devto", "github"]
         },
         connected: {
             type: Boolean,

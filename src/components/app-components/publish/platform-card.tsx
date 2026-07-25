@@ -42,10 +42,10 @@ export function PlatformCard({
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-foreground capitalize">{platform}</span>
           {!connected && (
-            <span className="text-[11px] text-muted-foreground">· Not connected</span>
+            <span className="text-sm text-muted-foreground">(Not connected)</span>
           )}
           {connected && published && (
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">· Published</span>
+            <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">(Published)</span>
           )}
         </div>
         <p className="text-[13px] text-muted-foreground mt-0.5 line-clamp-1">{description}</p>

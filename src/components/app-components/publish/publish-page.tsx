@@ -8,7 +8,6 @@ import Image from "next/image";
 import { BackgroundPattern } from "../background-pattern";
 import { PlatformCard } from "./platform-card";
 import { DevToForm } from "./forms/devto-form";
-import { HashnodeForm } from "./forms/hashnode-form";
 import { BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
 import { PublishButton } from "./publish-button";
 import { isPlatformConnected } from "@/lib/helper/connections";
@@ -33,7 +32,6 @@ type PlatformMetaData = {
 
 const platform_notes: Record<BlogPlatform, string> = {
   devto: "Distribute to Dev.to — reach the developer community.",
-  hashnode: "Distribute to Hashnode — a modern blogging platform.",
 };
 
 export const PublishPage = ({ data }: PublishPageProps) => {
@@ -58,15 +56,6 @@ export const PublishPage = ({ data }: PublishPageProps) => {
         />
       ),
     },
-    hashnode: {
-      name: "Hashnode",
-      data: getForm("hashnode"),
-      logo: (
-        <svg viewBox="0 0 39 39" className="w-5 h-5 fill-blue-600">
-          <path d="M2.68 13.032c-3.573 3.505-3.573 9.363 0 12.936L13.032 36.32c3.505 3.573 9.363 3.573 12.936 0L36.32 25.968c3.573-3.573 3.573-9.431 0-12.936L25.968 2.68c-3.573-3.573-9.431-3.573-12.936 0zm12.211 1.935c2.507-2.521 6.582-2.544 9.104-.038s2.544 6.582.038 9.104-6.582 2.544-9.104.038-2.544-6.582-.038-9.104" />
-        </svg>
-      ),
-    },
   };
 
   const togglePlatform = (p: BlogPlatform) => {
@@ -87,14 +76,11 @@ export const PublishPage = ({ data }: PublishPageProps) => {
 
   const platformForms: Record<BlogPlatform, () => React.ReactNode> = {
     devto: () => <DevToForm data={data} />,
-    hashnode: () => <HashnodeForm data={data} />,
   };
 
   const renderForm = (platform: BlogPlatform) => platformForms[platform]();
 
-  const hasDisconnected =
-    !isPlatformConnected(connections, "devto") ||
-    !isPlatformConnected(connections, "hashnode");
+  const hasDisconnected = !isPlatformConnected(connections, "devto");
 
   return (
     <div

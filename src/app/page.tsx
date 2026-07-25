@@ -33,7 +33,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mt-6 leading-relaxed font-sans font-medium">
-              We help you connect to multiple platforms like Hashnode and Dev.to to upload blogs safely and securely at once like a jet.
+              Write in a rich block editor, optimize with AI, and publish instantly to Dev.to and your GitHub blog repository.
             </p>
             <div className="flex items-center gap-4 justify-center">
               <Link href="/dashboard" prefetch={false}>

@@ -11,27 +11,9 @@ export interface DevToFormState {
   organization_id: string;
 };
 
-export interface HashnodeFormState {
-  title: string;
-  markdown: string;
-  publication_id: string;
-  slug: string;
-  subtitle: string;
-  cover_image: string;
-  tags: string;
-  series: string;
-  seo_title: string;
-  seo_description: string;
-  canonical_url: string;
-  disable_comments: boolean;
-  hide_from_feed: boolean;
-  draft: boolean;
-};
-
 // Centralized platform-to-form-state mapping
 export interface PlatformFormStates {
     devto: DevToFormState;
-    hashnode: HashnodeFormState;
 }
 
 export type FormStates = PlatformFormStates[keyof PlatformFormStates];

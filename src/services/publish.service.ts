@@ -1,11 +1,11 @@
 import { connectDb } from "@/lib/drivers/db";
 import { BlogPlatform } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState } from "@/lib/types/platform.types";
+import { DevToFormState } from "@/lib/types/platform.types";
 import { IntegrationDataType } from "@/lib/types/global.types";
 import { Blog } from "@/models/blog.model";
 import { DevtoPublishConfig } from "@/models/platform.model";
+import { PublishConfig } from "@/models/publish-config.model";
 import { User } from "@/models/user.model";
-
 import { SelectedPlatformsData } from "@/lib/types/publish.types";
 
 type PublishInput = {
@@ -38,6 +38,11 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
     if(!blog) {
         throw new Error("Blog doen't exist");
     }
+    
+    const userDevtoAcc = user.connections.find((c: IntegrationDataType) => c.platform === "devto");
+    if(!userDevtoAcc || !userDevtoAcc.apiKey) {
+        throw new Error("You haven't connected your Dev.to account. Please connect your account first.");
+    }
 
     const devtoSettings = { list: devtoForm.tagStream, ...devtoForm };
 
@@ -52,10 +57,6 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
         new: true,
     });
 
-    const userDevtoAcc = user.connections.find((c: IntegrationDataType) => c.platform === "devto");
-    if(!userDevtoAcc || !userDevtoAcc.apiKey) {
-        throw new Error("You haven't connected your Dev.to account. Please connect your account first.");
-    }
 
     const userDevtoKey = userDevtoAcc.apiKey;
 
@@ -74,11 +75,12 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
         throw new Error(data.error || "Failed to publish on Dev.to");
     }
 
-    
     // Modify the blog details after publishing it
     const status = devtoForm.published ? "published" : "draft";
     
-    blog.published.push("devto");
+    if (!blog.published.includes("devto")) {
+        blog.published.push("devto");
+    }
     blog.status = status;
 
     await blog.save();
@@ -90,19 +92,21 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
     };
 };
 
-export const publishToHashnode = async (blogId: string, userId: string, hashnodeForm: HashnodeFormState): Promise<PublishResult> => {
-    if (!hashnodeForm.title.trim() || !hashnodeForm.markdown.trim()) {
-        throw new Error("Hashnode title and content are required");
-    }
+export const getSavedPublishConfigs = async (blogId: string, userId: string): Promise<SelectedPlatformsData> => {
+    await connectDb();
 
-    return {
-        platform: "hashnode",
-        success: true,
-        message: "Ready to publish on Hashnode",
-    };
+    const configs = await PublishConfig.find({ blog: blogId, user: userId });
+    const result: SelectedPlatformsData = {};
+
+    for (const config of configs) {
+        if (config.platform && config.settings) {
+            result[config.platform as BlogPlatform] = config.settings;
+        }
+    }
+    
+    return result;
 };
 
 export const platformPublishers: Record<BlogPlatform, PlatformPublisher> = {
     devto: ({ blogId, userId, formsData }) => publishToDevto(blogId, userId, formsData.devto!),
-    hashnode: ({ blogId, userId, formsData }) => publishToHashnode(blogId, userId, formsData.hashnode!),
 };

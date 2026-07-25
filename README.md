@@ -6,7 +6,7 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-7.x-47a248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-**Blog-It** is a premium, open-source multi-platform blogging hub. Write your blogs once in a unified, modern editor and publish them instantly to top developer platforms like **Dev.to** and **Hashnode** with a single click.
+**Blog-It** is a premium, open-source content studio for developers. Write your blogs in a unified, modern block editor, optimize with AI tools, and publish directly to **Dev.to** and **GitHub blog repositories**.
 
 ---
 
@@ -14,7 +14,7 @@
 
 - 📝 **Unified Block Editor**: A block-based editor powered by BlockNote, supporting headers, text formatting, list structures, code blocks, and cover image options.
 - 📂 **Draft Management Workspace**: A clean, centralized dashboard to create, view, update, and delete your local drafts.
-- ⚙️ **Publishing Channel Setup**: Fields to configure and verify credentials for popular developer networks (**Dev.to** and **Hashnode**) from your settings page.
+- ⚙️ **Publishing Channel Setup**: Fields to configure and verify credentials for developer platforms (like **Dev.to** and **GitHub**) from your settings page.
 - 📡 **Real-time Connection Indicators**: Visual, live-status badges integrated into the sidebar showing which accounts are configured.
 - 🔐 **Secure Authentication**: Secure user registration and sign-in utilizing email/password verification and bcrypt password hashing.
 - 🖼️ **CDN-Optimized Cover Uploads**: Media upload utility integrated with ImageKit CDN to upload and store blog cover images.

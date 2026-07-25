@@ -150,25 +150,6 @@ export const AppSidebar = () => {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-
-              <SidebarMenuItem className="mb-1">
-                <SidebarMenuButton asChild>
-                  <Link href="/dashboard/settings" className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2">
-                      <svg viewBox="0 0 39 39" className="w-4 h-4 fill-current">
-                        <path d="M2.68 13.032c-3.573 3.505-3.573 9.363 0 12.936L13.032 36.32c3.505 3.573 9.363 3.573 12.936 0L36.32 25.968c3.573-3.573 3.573-9.431 0-12.936L25.968 2.68c-3.573-3.573-9.431-3.573-12.936 0zm12.211 1.935c2.507-2.521 6.582-2.544 9.104-.038s2.544 6.582.038 9.104-6.582 2.544-9.104.038-2.544-6.582-.038-9.104" />
-                      </svg>
-                      <span>Hashnode</span>
-                    </div>
-                    <span
-                      className={cn(
-                        "size-2 rounded-full transition-all duration-300",
-                        isPlatformConnected(connections, "hashnode") ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
-                      )}
-                    />
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
