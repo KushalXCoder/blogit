@@ -6,7 +6,7 @@ import { Blog } from "@/models/blog.model";
 import { DevtoPublishConfig } from "@/models/platform.model";
 import { PublishConfig } from "@/models/publish-config.model";
 import { User } from "@/models/user.model";
-import { SelectedPlatformsData } from "@/lib/types/publish.types";
+import { decryptToken } from "@/lib/helper/encryption";
 
 type PublishInput = {
     blogId: string;
@@ -57,8 +57,7 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
         new: true,
     });
 
-
-    const userDevtoKey = userDevtoAcc.apiKey;
+    const userDevtoKey = decryptToken(userDevtoAcc.apiKey);
 
     // Post blog to devto
     const res = await fetch("https://dev.to/api/articles", {
@@ -107,6 +106,10 @@ export const getSavedPublishConfigs = async (blogId: string, userId: string): Pr
     return result;
 };
 
+import { publishToGithub } from "./github.service";
+import { SelectedPlatformsData } from "@/lib/types/publish.types";
+
 export const platformPublishers: Record<BlogPlatform, PlatformPublisher> = {
     devto: ({ blogId, userId, formsData }) => publishToDevto(blogId, userId, formsData.devto!),
+    github: ({ blogId, userId, formsData }) => publishToGithub(blogId, userId, formsData.github!),
 };

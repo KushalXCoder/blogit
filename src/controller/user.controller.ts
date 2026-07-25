@@ -7,6 +7,7 @@ import { signToken } from "@/lib/helper/signToken";
 import { getTokenData } from "@/lib/helper/getTokenData";
 import { isUserAuthenticated } from "@/lib/middleware/auth";
 import { upsertConnection } from "@/lib/helper/connections";
+import { encryptToken } from "@/lib/helper/encryption";
 
 type UserUpdatePayload = {
     updates: Partial<UserData>;
@@ -109,7 +110,7 @@ export const verifyDevtoKey = async (req: NextRequest) => {
         user.connections = upsertConnection(user.connections, {
             platform: "devto",
             connected: true,
-            apiKey: devtoKey,
+            apiKey: encryptToken(devtoKey),
         });
 
         await user.save();
@@ -139,3 +140,68 @@ export const verifyDevtoKey = async (req: NextRequest) => {
         return NextResponse.json({ message: "An error occurred during verification" }, { status: 500 });
     }
 }
+
+// Controller function to verify GitHub token
+export const verifyGithubKey = async (req: NextRequest) => {
+    try {
+        const { githubKey } = await req.json();
+        if (!githubKey) {
+            return NextResponse.json({ message: "Token is missing" }, { status: 400 });
+        }
+
+        const res = await fetch("https://api.github.com/user", {
+            headers: {
+                Authorization: `Bearer ${githubKey.trim()}`,
+                Accept: "application/vnd.github+json",
+                "User-Agent": "BlogIt-App",
+            },
+        });
+
+        if (!res.ok) {
+            const errData = await res.json();
+            return NextResponse.json({ message: errData.message || "Invalid GitHub Token" }, { status: 400 });
+        }
+
+        await connectDb();
+
+        const auth = await isUserAuthenticated(req);
+        if (!auth.authenticated) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+        const decoded = auth.data;
+
+        const user = await User.findOne({ email: decoded.email });
+        if (!user) {
+            return NextResponse.json({ message: "User not found" }, { status: 404 });
+        }
+
+        user.connections = upsertConnection(user.connections, {
+            platform: "github",
+            connected: true,
+            apiKey: encryptToken(githubKey.trim()),
+        });
+
+        await user.save();
+
+        const tokenData = getTokenData(user);
+        const token = signToken(tokenData);
+
+        const response = NextResponse.json({
+            message: "GitHub token verified successfully!",
+            data: tokenData,
+        }, { status: 200 });
+
+        response.cookies.set("blogit-token", token, {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            maxAge: 7 * 24 * 60 * 60,
+        });
+
+        return response;
+    } catch (error) {
+        console.error("GitHub verification error:", error);
+        return NextResponse.json({ message: "An error occurred during verification" }, { status: 500 });
+    }
+};
