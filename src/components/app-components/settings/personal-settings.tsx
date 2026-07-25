@@ -63,7 +63,7 @@ export const PersonalSettings = ({
     }
 
     return (
-        <Card className='shadow'>
+        <Card className='shadow w-full'>
             <CardHeader>
                 <CardTitle className="text-base">Personal Information</CardTitle>
                 <CardDescription>Update your basic profile details</CardDescription>

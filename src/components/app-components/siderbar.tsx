@@ -40,13 +40,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  BookOpen,
-  HelpCircle,
   MessageSquare,
   ChevronsUpDown,
   LogOut,
   User,
-  Sparkles,
 } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
 
@@ -145,6 +142,23 @@ export const AppSidebar = () => {
                       className={cn(
                         "size-2 rounded-full transition-all duration-300",
                         isPlatformConnected(connections, "devto") ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
+                      )}
+                    />
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem className="mb-1">
+                <SidebarMenuButton asChild>
+                  <Link href="/dashboard/settings" className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-2">
+                      <HugeiconsIcon icon={Github} className="w-4 h-4" />
+                      <span>GitHub</span>
+                    </div>
+                    <span
+                      className={cn(
+                        "size-2 rounded-full transition-all duration-300",
+                        isPlatformConnected(connections, "github") ? "bg-emerald-500 animate-pulse" : "bg-neutral-300"
                       )}
                     />
                   </Link>

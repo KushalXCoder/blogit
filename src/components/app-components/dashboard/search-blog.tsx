@@ -1,13 +1,14 @@
 import { Input } from "@/components/ui/input";
 import { UserBlogData } from "@/lib/types/blog.types";
 import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
 
 type BlogSearchProps = {
     blogs: UserBlogData[];
     setFilteredBlogs: (blogs: UserBlogData[]) => void;
     search: string;
     setSearch: (text: string) => void;
-}
+};
 
 export const BlogSearch = ({
     blogs,
@@ -37,11 +38,14 @@ export const BlogSearch = ({
     }, [search, blogs, setFilteredBlogs]);
 
     return (
-        <Input
-            placeholder="Search blogs..."
-            className="bg-white w-1/2 py-4 max-sm:w-full"
-            value={search}
-            onChange={(e) => handleSearch(e)}
-        />
+        <div className="relative w-72 max-sm:w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+            <Input
+                placeholder="Search blogs..."
+                className="bg-white dark:bg-card pl-9 h-10 w-full"
+                value={search}
+                onChange={(e) => handleSearch(e)}
+            />
+        </div>
     )
 }

@@ -83,7 +83,7 @@ export const Profile = ({
     }
 
     return (
-        <Card className='shadow'>
+        <Card className='shadow w-full'>
             <CardHeader>
                 <CardTitle className="text-base">Profile Photo</CardTitle>
                 <CardDescription>Upload and manage your profile picture</CardDescription>
