@@ -15,4 +15,4 @@ export type UserBlogData = BlogData & {
     updatedAt: string;
 }
 
-export type BlogPlatform = "devto";
+export type BlogPlatform = "devto" | "github";

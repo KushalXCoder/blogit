@@ -18,5 +18,20 @@ export const devtoSchema = new Schema({
     }
 });
 
+// GitHub Settings Discriminator Schema
+export const githubSchema = new Schema({
+    settings: {
+        title: { type: String, default: "" },
+        content: { type: String, default: "" },
+        owner: { type: String, default: "" },
+        repo: { type: String, default: "" },
+        branch: { type: String, default: "main" },
+        filePath: { type: String, default: "" },
+        commitMessage: { type: String, default: "" },
+        customFields: { type: [{ key: String, value: String }], default: [] },
+    }
+});
+
 // Register discriminators safely for hot-reloading environments like Next.js
 export const DevtoPublishConfig = PublishConfig.discriminators?.devto || PublishConfig.discriminator("devto", devtoSchema);
+export const GithubPublishConfig = PublishConfig.discriminators?.github || PublishConfig.discriminator("github", githubSchema);

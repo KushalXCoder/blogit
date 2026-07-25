@@ -21,6 +21,24 @@ export const initialFormStateCreators: {
         series: "",
         organization_id: "",
     }),
+    github: (data) => {
+        // Derive clean slug for default filename: e.g. "my-first-blog.md"
+        const slug = (data.title || "untitled")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+
+        return {
+            title: data.title,
+            content: data.content,
+            owner: "",
+            repo: "",
+            branch: "main",
+            filePath: `content/posts/${slug || "post"}.md`,
+            commitMessage: `feat(blog): publish post "${data.title || "Untitled"}"`,
+            customFields: [],
+        };
+    },
 };
 
 export const useFormState = (data: UserBlogData) => {

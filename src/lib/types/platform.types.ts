@@ -11,9 +11,26 @@ export interface DevToFormState {
   organization_id: string;
 };
 
+export interface CustomFrontmatterField {
+  key: string;
+  value: string;
+}
+
+export interface GithubFormState {
+  title: string;
+  content: string;
+  owner: string;
+  repo: string;
+  branch: string;
+  filePath: string;
+  commitMessage: string;
+  customFields: CustomFrontmatterField[];
+}
+
 // Centralized platform-to-form-state mapping
 export interface PlatformFormStates {
     devto: DevToFormState;
+    github: GithubFormState;
 }
 
 export type FormStates = PlatformFormStates[keyof PlatformFormStates];
