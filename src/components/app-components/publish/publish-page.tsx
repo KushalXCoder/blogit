@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BackgroundPattern } from "../background-pattern";
 import { PlatformCard } from "./platform-card";
 import { DevToForm } from "./forms/devto-form";
+import { GithubForm } from "./forms/github-form";
 import { BlogPlatform, UserBlogData } from "@/lib/types/blog.types";
 import { PublishButton } from "./publish-button";
 import { isPlatformConnected } from "@/lib/helper/connections";
@@ -19,6 +20,8 @@ import { useFormState } from "@/hooks/use-form-state";
 import { FormStates } from "@/lib/types/platform.types";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Github } from "@hugeicons/core-free-icons";
 
 type PublishPageProps = {
   data: UserBlogData;
@@ -32,6 +35,7 @@ type PlatformMetaData = {
 
 const platform_notes: Record<BlogPlatform, string> = {
   devto: "Distribute to Dev.to — reach the developer community.",
+  github: "Publish to GitHub Repository — auto-commit Markdown/MDX with custom frontmatter headers.",
 };
 
 export const PublishPage = ({ data }: PublishPageProps) => {
@@ -56,6 +60,11 @@ export const PublishPage = ({ data }: PublishPageProps) => {
         />
       ),
     },
+    github: {
+      name: "GitHub",
+      data: getForm("github"),
+      logo: <HugeiconsIcon icon={Github} className="size-5" />,
+    },
   };
 
   const togglePlatform = (p: BlogPlatform) => {
@@ -76,11 +85,14 @@ export const PublishPage = ({ data }: PublishPageProps) => {
 
   const platformForms: Record<BlogPlatform, () => React.ReactNode> = {
     devto: () => <DevToForm data={data} />,
+    github: () => <GithubForm data={data} />,
   };
 
   const renderForm = (platform: BlogPlatform) => platformForms[platform]();
 
-  const hasDisconnected = !isPlatformConnected(connections, "devto");
+  const hasDisconnected =
+    !isPlatformConnected(connections, "devto") ||
+    !isPlatformConnected(connections, "github");
 
   return (
     <div

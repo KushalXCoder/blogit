@@ -43,9 +43,26 @@ export const PublishButton = ({
 
         try {
             setLoading(true);
-            const publishingData = await publishBlog(blogId, selectedPlatforms, selectedPlatformsData);
-            console.log("Publishing data:", publishingData);
-            toast.success("Blog published successfully");
+            const response = await publishBlog(blogId, selectedPlatforms, selectedPlatformsData);
+            
+            if (response && Array.isArray(response.data)) {
+                let anySuccess = false;
+                response.data.forEach((result: { platform?: string; success: boolean; message: string }) => {
+                    const platformName = result.platform ? result.platform.toUpperCase() : "Platform";
+                    if (result.success) {
+                        anySuccess = true;
+                        toast.success(`[${platformName}] ${result.message}`);
+                    } else {
+                        toast.error(`[${platformName}] Error: ${result.message}`);
+                    }
+                });
+
+                if (!anySuccess && response.data.length > 0) {
+                    toast.error("Failed to publish to selected platforms.");
+                }
+            } else {
+                toast.success("Publish request completed.");
+            }
         } catch (error) {
             console.error("Error publishing blog:", error);
             toast.error(error instanceof Error ? error.message : "Failed to publish blog");

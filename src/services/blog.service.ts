@@ -7,9 +7,16 @@ import { PublishButtonData, SelectedPlatformsData } from "@/lib/types/publish.ty
 
 const isServer = typeof window === "undefined";
 
-const BASE_URL = isServer 
-    ? (process.env.BASE_URL || "http://localhost:3000/api") 
-    : "/api";
+const getBaseUrl = () => {
+    if (!isServer) return "/api";
+    if (process.env.BASE_URL) {
+        return process.env.BASE_URL.replace("localhost", "127.0.0.1");
+    }
+    const port = process.env.PORT || 3000;
+    return `http://127.0.0.1:${port}/api`;
+};
+
+const BASE_URL = getBaseUrl();
 
 type UpdateBlogData = BlogData & {
     blogId: string;
