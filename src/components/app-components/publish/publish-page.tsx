@@ -22,6 +22,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Github } from "@hugeicons/core-free-icons";
+import { ArticleExporters } from "./article-exporters";
 
 type PublishPageProps = {
   data: UserBlogData;
@@ -98,7 +99,7 @@ export const PublishPage = ({ data }: PublishPageProps) => {
     <div
       className={cn(
         "relative flex-1 w-full bg-white",
-        step === 2 ? "h-screen overflow-hidden" : "min-h-screen",
+        step === 2 ? "h-full overflow-hidden" : "min-h-screen",
       )}
     >
       <BackgroundPattern />
@@ -156,6 +157,8 @@ export const PublishPage = ({ data }: PublishPageProps) => {
                     </Link>
                   </p>
                 )}
+
+                <ArticleExporters blog={data} />
               </div>
 
               {/* Sidebar */}
@@ -283,7 +286,7 @@ export const PublishPage = ({ data }: PublishPageProps) => {
               )}
             </div>
 
-            <div className="h-full bg-white">
+            <div className="h-full overflow-hidden bg-white">
               <AiChat />
             </div>
           </div>
