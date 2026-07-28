@@ -12,25 +12,30 @@ import { useEffect, useRef } from "react";
 
 const Editor = () => {
   const { content, setDetails } = blogStore();
-  const initialInstance = useRef<Boolean>(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Create an editor instance with the initial content from the store
   const editor = useCreateBlockNote();
+  const isSelfUpdate = useRef<boolean>(false);
 
   useEffect(() => {
-    if(!content) return;
-    if(initialInstance.current) return;
+    if (!content) return;
 
-    async function loadContent() {
-      initialInstance.current = true;
-      const blocks = editor.tryParseMarkdownToBlocks(content);
-      editor.replaceBlocks(editor.document, blocks);
+    // Skip replacing blocks if the update came from typing inside the editor
+    if (isSelfUpdate.current) {
+      isSelfUpdate.current = false;
+      return;
     }
 
-    loadContent();
+    async function syncContent() {
+      const currentMarkdown = editor.blocksToMarkdownLossy(editor.document);
+      if (currentMarkdown.trim() !== content.trim()) {
+        const blocks = editor.tryParseMarkdownToBlocks(content);
+        editor.replaceBlocks(editor.document, blocks);
+      }
+    }
 
-  }, [content]);
+    syncContent();
+  }, [content, editor]);
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const countWords = (blocks: Block[]) => {
     let total = 0;
@@ -64,9 +69,10 @@ const Editor = () => {
     }
 
     timerRef.current = setTimeout(() => {
+      isSelfUpdate.current = true;
       // Set the content and store
-      const content = editor.blocksToMarkdownLossy(editor.document);
-      setDetails({ content });
+      const updatedMarkdown = editor.blocksToMarkdownLossy(editor.document);
+      setDetails({ content: updatedMarkdown });
 
       // Count the words in the editor and update the store
       countWords(editor.document);

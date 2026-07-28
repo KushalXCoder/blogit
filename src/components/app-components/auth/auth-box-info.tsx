@@ -11,8 +11,8 @@ export const AuthBoxInfo = () => {
           Write once. Publish everywhere.
         </h2>
         <p className="text-neutral-400 text-xs leading-relaxed">
-          Empower your tech blogging workflow. Write in a unified block
-          editor, leverage AI SEO tools, and publish directly to DEV.to & GitHub.
+          The unified technical writing studio for developers. Write in a rich block editor,
+          leverage AI optimization, and publish directly to Dev.to and GitHub.
         </p>
       </div>
       <div className="z-10 text-neutral-500 text-[11px] font-normal">

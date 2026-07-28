@@ -6,6 +6,8 @@ import { CopyIcon, CheckIcon } from "lucide-react";
 import type { ComponentProps, HTMLAttributes } from "react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
   from: "user" | "assistant" | "system";
@@ -39,6 +41,16 @@ export const MessageContent = ({
     {...props}
   >
     {children}
+  </div>
+);
+
+export type MessageResponseProps = {
+  content: string;
+};
+
+export const MessageResponse = ({ content }: MessageResponseProps) => (
+  <div className="text-xs leading-relaxed space-y-2 text-foreground [&_h1]:text-sm [&_h1]:font-bold [&_h2]:text-sm [&_h2]:font-bold [&_h3]:text-xs [&_h3]:font-bold [&_h3]:mt-3 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_code]:bg-secondary [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded-sm [&_pre]:bg-secondary [&_pre]:p-3 [&_pre]:rounded-md [&_pre]:overflow-x-auto [&_p]:my-1.5 [&_strong]:font-semibold">
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
   </div>
 );
 

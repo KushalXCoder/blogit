@@ -9,6 +9,7 @@ import {
 import {
   Message,
   MessageContent,
+  MessageResponse,
   MessageActions,
   MessageCopyAction,
 } from "@/components/ai-elements/message";
@@ -27,6 +28,8 @@ import { cn } from "@/lib/utils";
 import { ChatItem } from "@/lib/types/ai.types";
 import { AI_SUGGESTIONS } from "@/lib/constants/ai.constants";
 
+import { fetchAiAssistantResponse } from "@/services/client/ai.client";
+
 export const AiChat = () => {
   const { title, content } = blogStore();
   const [messages, setMessages] = useState<ChatItem[]>([]);
@@ -42,18 +45,11 @@ export const AiChat = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai/assistant", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text.trim(), title, content }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to generate response.");
+      const responseText = await fetchAiAssistantResponse(text.trim(), title, content);
 
       setMessages((prev) => [
         ...prev,
-        { id: (Date.now() + 1).toString(), role: "assistant", content: data.response },
+        { id: (Date.now() + 1).toString(), role: "assistant", content: responseText },
       ]);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong.";
@@ -75,12 +71,14 @@ export const AiChat = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-card">
+    <div className="h-full max-h-full flex flex-col bg-white dark:bg-card overflow-hidden">
       {/* Header */}
-      <AiChatHeader />
+      <div className="shrink-0">
+        <AiChatHeader />
+      </div>
 
       {/* Suggestion Bar */}
-      <div className="px-5 py-3 border-b border-border/50">
+      <div className="px-5 py-3 border-b border-border/50 shrink-0">
         <SuggestionList>
           {AI_SUGGESTIONS.map((s, i) => (
             <Suggestion
@@ -95,15 +93,19 @@ export const AiChat = () => {
 
       {/* Conversation Window */}
       <Conversation className="flex-1 min-h-0">
-        <ConversationContent className={cn("gap-5 p-5", messages.length === 0 && "h-full justify-center items-center")}>
+        <ConversationContent className={cn("gap-5 p-5 pb-8", messages.length === 0 && "h-full justify-center items-center")}>
           {messages.length === 0 && !loading && (
             <AiChatEmptyState onSelectPrompt={send} />
           )}
 
           {messages.map((m) => (
             <Message key={m.id} from={m.role}>
-              <MessageContent className="whitespace-pre-wrap text-xs leading-relaxed">
-                {m.content}
+              <MessageContent className={cn(m.role === "assistant" && "bg-transparent p-0 shadow-none border-0")}>
+                {m.role === "assistant" ? (
+                  <MessageResponse content={m.content} />
+                ) : (
+                  <span className="whitespace-pre-wrap text-xs">{m.content}</span>
+                )}
               </MessageContent>
               {m.role === "assistant" && (
                 <MessageActions>
@@ -126,7 +128,7 @@ export const AiChat = () => {
       </Conversation>
 
       {/* Prompt Input */}
-      <div className="p-4 border-t border-border/80">
+      <div className="p-4 border-t border-border/80 shrink-0 bg-white dark:bg-card z-10">
         <PromptInput onSubmit={(e) => { e.preventDefault(); send(input); }}>
           <PromptInputTextarea
             value={input}
