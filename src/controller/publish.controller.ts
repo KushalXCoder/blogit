@@ -1,7 +1,7 @@
 import { isUserAuthenticated } from "@/lib/middleware/auth";
 import { BlogPlatform } from "@/lib/types/blog.types";
 import { SelectedPlatformsData } from "@/lib/types/publish.types";
-import { platformPublishers } from "@/services/publish.service";
+import { platformPublishers, getSavedPublishConfigs } from "@/services/publish.service";
 import { NextRequest, NextResponse } from "next/server";
 
 // Controller to publish blog to selected platforms
@@ -60,3 +60,24 @@ export const publishBlog = async (req: NextRequest) => {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 }
+
+// Controller to fetch saved platform publish configurations for a blog
+export const getPublishConfigs = async (req: NextRequest) => {
+    try {
+        const auth = await isUserAuthenticated(req);
+        if (!auth.authenticated) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
+        const blogId = req.nextUrl.searchParams.get("blogId");
+        if (!blogId) {
+            return NextResponse.json({ message: "Missing blogId parameter" }, { status: 400 });
+        }
+
+        const savedConfigs = await getSavedPublishConfigs(blogId, auth.data._id);
+        return NextResponse.json({ data: savedConfigs }, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching saved publish configs:", error);
+        return NextResponse.json({ message: "Failed to fetch publish configs" }, { status: 500 });
+    }
+};

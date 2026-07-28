@@ -10,12 +10,12 @@ export const initialFormStateCreators: {
     [P in keyof PlatformFormStates]: (data: UserBlogData) => PlatformFormStates[P];
 } = {
     devto: (data) => ({
-        title: data.title,
-        body_markdown: data.content,
+        title: data.title || "",
+        body_markdown: data.content || "",
         published: true,
-        tagStream: "",
-        tags: [],
-        main_image: data.coverImage,
+        tagStream: Array.isArray(data.tags) ? data.tags.join(", ") : "",
+        tags: data.tags || [],
+        main_image: data.coverImage || "",
         description: "",
         canonical_url: "",
         series: "",
@@ -29,8 +29,8 @@ export const initialFormStateCreators: {
             .replace(/(^-|-$)/g, "");
 
         return {
-            title: data.title,
-            content: data.content,
+            title: data.title || "",
+            content: data.content || "",
             owner: "",
             repo: "",
             branch: "main",
@@ -41,12 +41,28 @@ export const initialFormStateCreators: {
     },
 };
 
+import { fetchSavedPublishConfigs } from "@/services/client/publish.client";
+
 export const useFormState = (data: UserBlogData) => {
     const store = useFormStore();
 
     React.useEffect(() => {
+        if (!data || !data._id) return;
         store.initialize(data);
-    }, [data]);
+
+        let isMounted = true;
+        fetchSavedPublishConfigs(data._id)
+            .then((configs) => {
+                if (isMounted && configs) {
+                    store.hydrateSavedConfigs(configs as Record<string, unknown>);
+                }
+            })
+            .catch((err) => console.error("Failed to load saved publish configs:", err));
+
+        return () => {
+            isMounted = false;
+        };
+    }, [data?._id]);
 
     const getForm = <P extends keyof PlatformFormStates>(platform: P): PlatformFormStates[P] => {
         return (store.forms[platform] || initialFormStateCreators[platform](data)) as PlatformFormStates[P];

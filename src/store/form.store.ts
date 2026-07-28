@@ -11,6 +11,7 @@ interface FormStoreState {
         update: PlatformFormStates[P] | ((prev: PlatformFormStates[P]) => PlatformFormStates[P])
     ) => void;
     initialize: (data: UserBlogData) => void;
+    hydrateSavedConfigs: (configs: Record<string, unknown>) => void;
 }
 
 // Generic Zustand Store
@@ -46,5 +47,20 @@ export const useFormStore = create<FormStoreState>((set) => ({
             blogId: data._id,
             forms,
         };
+    }),
+    hydrateSavedConfigs: (configs) => set((state) => {
+        const updatedForms = { ...state.forms };
+        for (const platform in configs) {
+            const k = platform as keyof PlatformFormStates;
+            const savedSetting = configs[platform];
+            if (savedSetting && typeof savedSetting === "object") {
+                const currentForm = updatedForms[k] || {};
+                updatedForms[k] = {
+                    ...currentForm,
+                    ...savedSetting,
+                } as never;
+            }
+        }
+        return { forms: updatedForms };
     }),
 }));
