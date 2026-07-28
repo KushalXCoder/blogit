@@ -9,6 +9,7 @@ export interface DevToFormState {
   canonical_url: string;
   series: string;
   organization_id: string;
+  articleId?: number | null;
 };
 
 export interface CustomFrontmatterField {

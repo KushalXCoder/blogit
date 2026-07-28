@@ -44,35 +44,100 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
         throw new Error("You haven't connected your Dev.to account. Please connect your account first.");
     }
 
-    const devtoSettings = { list: devtoForm.tagStream, ...devtoForm };
-
-    // Save platform config for this blog
-    await DevtoPublishConfig.findOneAndUpdate({
+    // Check for existing saved Dev.to articleId
+    const existingConfig = await DevtoPublishConfig.findOne({
         user: userId,
         blog: blogId,
-    }, {
-        settings: devtoSettings,
-    }, {
-        upsert: true,
-        new: true,
+        platform: "devto",
     });
 
     const userDevtoKey = decryptToken(userDevtoAcc.apiKey);
+    const targetArticleId = devtoForm.articleId || existingConfig?.settings?.articleId;
 
-    // Post blog to devto
-    const res = await fetch("https://dev.to/api/articles", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "api-key": userDevtoKey,
-        },
-        body: JSON.stringify({ article: devtoForm }),
-    });
+    // Parse tags for Dev.to API
+    const parsedTags = devtoForm.tagStream
+        ? devtoForm.tagStream.split(",").map((t) => t.trim()).filter(Boolean)
+        : devtoForm.tags || [];
+
+    const articlePayload = {
+        title: devtoForm.title,
+        body_markdown: devtoForm.body_markdown,
+        published: devtoForm.published,
+        tags: parsedTags,
+        main_image: devtoForm.main_image || undefined,
+        canonical_url: devtoForm.canonical_url || undefined,
+        description: devtoForm.description || undefined,
+        series: devtoForm.series || undefined,
+        organization_id: devtoForm.organization_id ? Number(devtoForm.organization_id) : undefined,
+    };
+
+    let res: Response;
+    let isUpdate = false;
+
+    if (targetArticleId) {
+        // Update existing article via PUT
+        res = await fetch(`https://dev.to/api/articles/${targetArticleId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "api-key": userDevtoKey,
+            },
+            body: JSON.stringify({ article: articlePayload }),
+        });
+
+        if (res.ok) {
+            isUpdate = true;
+        } else if (res.status === 404) {
+            // Fallback to POST if target article was deleted on Dev.to
+            res = await fetch("https://dev.to/api/articles", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "api-key": userDevtoKey,
+                },
+                body: JSON.stringify({ article: articlePayload }),
+            });
+        }
+    } else {
+        // Create new article via POST
+        res = await fetch("https://dev.to/api/articles", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "api-key": userDevtoKey,
+            },
+            body: JSON.stringify({ article: articlePayload }),
+        });
+    }
 
     const data = await res.json();
-    if(!res.ok) {
+    if (!res.ok) {
         throw new Error(data.error || "Failed to publish on Dev.to");
     }
+
+    const createdArticleId = data.id || targetArticleId;
+    const devtoSettings = {
+        ...devtoForm,
+        list: devtoForm.tagStream,
+        articleId: createdArticleId,
+    };
+
+    // Save platform config with articleId for future updates
+    await DevtoPublishConfig.findOneAndUpdate(
+        {
+            user: userId,
+            blog: blogId,
+            platform: "devto",
+        },
+        {
+            platform: "devto",
+            settings: devtoSettings,
+        },
+        {
+            upsert: true,
+            new: true,
+        }
+    );
 
     // Modify the blog details after publishing it
     const status = devtoForm.published ? "published" : "draft";
@@ -87,7 +152,7 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
     return {
         platform: "devto",
         success: true,
-        message: "Ready to publish on Dev.to",
+        message: isUpdate ? "Successfully updated article on Dev.to" : "Successfully published to Dev.to",
     };
 };
 
@@ -98,8 +163,9 @@ export const getSavedPublishConfigs = async (blogId: string, userId: string): Pr
     const result: SelectedPlatformsData = {};
 
     for (const config of configs) {
-        if (config.platform && config.settings) {
-            result[config.platform as BlogPlatform] = config.settings;
+        const platformKey = (config.platform || config.__t) as BlogPlatform;
+        if (platformKey && config.settings) {
+            result[platformKey] = config.settings;
         }
     }
     

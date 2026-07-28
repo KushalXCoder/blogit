@@ -146,8 +146,8 @@ export async function publishToGithub(
 
   // Save GitHub publish configuration in MongoDB
   await GithubPublishConfig.findOneAndUpdate(
-    { user: userId, blog: blogId },
-    { settings: githubForm },
+    { user: userId, blog: blogId, platform: "github" },
+    { platform: "github", settings: githubForm },
     { upsert: true, new: true }
   );
 

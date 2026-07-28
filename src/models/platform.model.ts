@@ -15,6 +15,7 @@ export const devtoSchema = new Schema({
         canonical_url: { type: String, default: "" },
         series: { type: String, default: "" },
         organization_id: { type: String, default: "" },
+        articleId: { type: Number, default: null },
     }
 });
 
