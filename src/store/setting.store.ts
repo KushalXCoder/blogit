@@ -4,7 +4,7 @@ type SettingsStore = {
     hasImageSelected: boolean;
     image: string;
     devtoKey: string;
-    hashnodeKey: string;
+    githubKey: string;
 
     updateSettings: (settings: Partial<SettingsStore>) => void;
 }
@@ -13,6 +13,6 @@ export const settingsStore = create<SettingsStore>((set) => ({
     hasImageSelected: false,
     image: '',
     devtoKey: '',
-    hashnodeKey: '',
+    githubKey: '',
     updateSettings: (settings) => set((state) => ({ ...state, ...settings })),
 }));

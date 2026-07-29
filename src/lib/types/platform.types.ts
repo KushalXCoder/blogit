@@ -9,29 +9,29 @@ export interface DevToFormState {
   canonical_url: string;
   series: string;
   organization_id: string;
+  articleId?: number | null;
 };
 
-export interface HashnodeFormState {
+export interface CustomFrontmatterField {
+  key: string;
+  value: string;
+}
+
+export interface GithubFormState {
   title: string;
-  markdown: string;
-  publication_id: string;
-  slug: string;
-  subtitle: string;
-  cover_image: string;
-  tags: string;
-  series: string;
-  seo_title: string;
-  seo_description: string;
-  canonical_url: string;
-  disable_comments: boolean;
-  hide_from_feed: boolean;
-  draft: boolean;
-};
+  content: string;
+  owner: string;
+  repo: string;
+  branch: string;
+  filePath: string;
+  commitMessage: string;
+  customFields: CustomFrontmatterField[];
+}
 
 // Centralized platform-to-form-state mapping
 export interface PlatformFormStates {
     devto: DevToFormState;
-    hashnode: HashnodeFormState;
+    github: GithubFormState;
 }
 
 export type FormStates = PlatformFormStates[keyof PlatformFormStates];

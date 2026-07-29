@@ -1,12 +1,12 @@
 import { connectDb } from "@/lib/drivers/db";
 import { BlogPlatform } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState } from "@/lib/types/platform.types";
+import { DevToFormState } from "@/lib/types/platform.types";
 import { IntegrationDataType } from "@/lib/types/global.types";
 import { Blog } from "@/models/blog.model";
 import { DevtoPublishConfig } from "@/models/platform.model";
+import { PublishConfig } from "@/models/publish-config.model";
 import { User } from "@/models/user.model";
-
-import { SelectedPlatformsData } from "@/lib/types/publish.types";
+import { decryptToken } from "@/lib/helper/encryption";
 
 type PublishInput = {
     blogId: string;
@@ -38,47 +38,113 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
     if(!blog) {
         throw new Error("Blog doen't exist");
     }
-
-    const devtoSettings = { list: devtoForm.tagStream, ...devtoForm };
-
-    // Save platform config for this blog
-    await DevtoPublishConfig.findOneAndUpdate({
-        user: userId,
-        blog: blogId,
-    }, {
-        settings: devtoSettings,
-    }, {
-        upsert: true,
-        new: true,
-    });
-
+    
     const userDevtoAcc = user.connections.find((c: IntegrationDataType) => c.platform === "devto");
     if(!userDevtoAcc || !userDevtoAcc.apiKey) {
         throw new Error("You haven't connected your Dev.to account. Please connect your account first.");
     }
 
-    const userDevtoKey = userDevtoAcc.apiKey;
-
-    // Post blog to devto
-    const res = await fetch("https://dev.to/api/articles", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "api-key": userDevtoKey,
-        },
-        body: JSON.stringify({ article: devtoForm }),
+    // Check for existing saved Dev.to articleId
+    const existingConfig = await DevtoPublishConfig.findOne({
+        user: userId,
+        blog: blogId,
+        platform: "devto",
     });
 
+    const userDevtoKey = decryptToken(userDevtoAcc.apiKey);
+    const targetArticleId = devtoForm.articleId || existingConfig?.settings?.articleId;
+
+    // Parse tags for Dev.to API
+    const parsedTags = devtoForm.tagStream
+        ? devtoForm.tagStream.split(",").map((t) => t.trim()).filter(Boolean)
+        : devtoForm.tags || [];
+
+    const articlePayload = {
+        title: devtoForm.title,
+        body_markdown: devtoForm.body_markdown,
+        published: devtoForm.published,
+        tags: parsedTags,
+        main_image: devtoForm.main_image || undefined,
+        canonical_url: devtoForm.canonical_url || undefined,
+        description: devtoForm.description || undefined,
+        series: devtoForm.series || undefined,
+        organization_id: devtoForm.organization_id ? Number(devtoForm.organization_id) : undefined,
+    };
+
+    let res: Response;
+    let isUpdate = false;
+
+    if (targetArticleId) {
+        // Update existing article via PUT
+        res = await fetch(`https://dev.to/api/articles/${targetArticleId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "api-key": userDevtoKey,
+            },
+            body: JSON.stringify({ article: articlePayload }),
+        });
+
+        if (res.ok) {
+            isUpdate = true;
+        } else if (res.status === 404) {
+            // Fallback to POST if target article was deleted on Dev.to
+            res = await fetch("https://dev.to/api/articles", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "api-key": userDevtoKey,
+                },
+                body: JSON.stringify({ article: articlePayload }),
+            });
+        }
+    } else {
+        // Create new article via POST
+        res = await fetch("https://dev.to/api/articles", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "api-key": userDevtoKey,
+            },
+            body: JSON.stringify({ article: articlePayload }),
+        });
+    }
+
     const data = await res.json();
-    if(!res.ok) {
+    if (!res.ok) {
         throw new Error(data.error || "Failed to publish on Dev.to");
     }
 
-    
+    const createdArticleId = data.id || targetArticleId;
+    const devtoSettings = {
+        ...devtoForm,
+        list: devtoForm.tagStream,
+        articleId: createdArticleId,
+    };
+
+    // Save platform config with articleId for future updates
+    await DevtoPublishConfig.findOneAndUpdate(
+        {
+            user: userId,
+            blog: blogId,
+            platform: "devto",
+        },
+        {
+            platform: "devto",
+            settings: devtoSettings,
+        },
+        {
+            upsert: true,
+            new: true,
+        }
+    );
+
     // Modify the blog details after publishing it
     const status = devtoForm.published ? "published" : "draft";
     
-    blog.published.push("devto");
+    if (!blog.published.includes("devto")) {
+        blog.published.push("devto");
+    }
     blog.status = status;
 
     await blog.save();
@@ -86,23 +152,30 @@ export const publishToDevto = async (blogId: string, userId: string, devtoForm: 
     return {
         platform: "devto",
         success: true,
-        message: "Ready to publish on Dev.to",
+        message: isUpdate ? "Successfully updated article on Dev.to" : "Successfully published to Dev.to",
     };
 };
 
-export const publishToHashnode = async (blogId: string, userId: string, hashnodeForm: HashnodeFormState): Promise<PublishResult> => {
-    if (!hashnodeForm.title.trim() || !hashnodeForm.markdown.trim()) {
-        throw new Error("Hashnode title and content are required");
+export const getSavedPublishConfigs = async (blogId: string, userId: string): Promise<SelectedPlatformsData> => {
+    await connectDb();
+
+    const configs = await PublishConfig.find({ blog: blogId, user: userId });
+    const result: SelectedPlatformsData = {};
+
+    for (const config of configs) {
+        const platformKey = (config.platform || config.__t) as BlogPlatform;
+        if (platformKey && config.settings) {
+            result[platformKey] = config.settings;
+        }
     }
-
-    return {
-        platform: "hashnode",
-        success: true,
-        message: "Ready to publish on Hashnode",
-    };
+    
+    return result;
 };
+
+import { publishToGithub } from "./github.service";
+import { SelectedPlatformsData } from "@/lib/types/publish.types";
 
 export const platformPublishers: Record<BlogPlatform, PlatformPublisher> = {
     devto: ({ blogId, userId, formsData }) => publishToDevto(blogId, userId, formsData.devto!),
-    hashnode: ({ blogId, userId, formsData }) => publishToHashnode(blogId, userId, formsData.hashnode!),
+    github: ({ blogId, userId, formsData }) => publishToGithub(blogId, userId, formsData.github!),
 };

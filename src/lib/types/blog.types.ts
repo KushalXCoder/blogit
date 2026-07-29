@@ -10,8 +10,9 @@ export type UserBlogData = BlogData & {
     user: string;
     tags: string[];
     status: "draft" | "published";
+    published?: string[];
     createdAt: string;
     updatedAt: string;
 }
 
-export type BlogPlatform = "devto" | "hashnode";
+export type BlogPlatform = "devto" | "github";

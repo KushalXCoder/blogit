@@ -22,6 +22,23 @@ export const verifyDevtoKey = async (devtoKey: string) => {
     return data.data;
 }
 
+export const verifyGithubKey = async (githubKey: string) => {
+    const res = await fetch('/api/verify/github', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ githubKey }),
+    });
+
+    const data: ApiResponse<UserData> = await res.json();
+    if (!res.ok) {
+        throw new Error(data.message || "Verification failed");
+    }
+
+    return data.data;
+}
+
 const authenticator = async () => {
     const res = await fetch("/api/upload/auth");
 

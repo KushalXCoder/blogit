@@ -7,7 +7,6 @@ export type UserSettings = {
     email: string;
     image: string;
     devtoKey?: string;
-    hashnodeKey?: string;
 };
 
 export type UserData = {

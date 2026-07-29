@@ -1,7 +1,7 @@
 "use client";
 
 import { UserBlogData } from "@/lib/types/blog.types";
-import { DevToFormState, HashnodeFormState, PlatformFormStates } from "@/lib/types/platform.types";
+import { DevToFormState, PlatformFormStates } from "@/lib/types/platform.types";
 import { useFormStore } from "@/store/form.store";
 import React from "react";
 
@@ -10,41 +10,59 @@ export const initialFormStateCreators: {
     [P in keyof PlatformFormStates]: (data: UserBlogData) => PlatformFormStates[P];
 } = {
     devto: (data) => ({
-        title: data.title,
-        body_markdown: data.content,
+        title: data.title || "",
+        body_markdown: data.content || "",
         published: true,
-        tagStream: "",
-        tags: [],
-        main_image: data.coverImage,
+        tagStream: Array.isArray(data.tags) ? data.tags.join(", ") : "",
+        tags: data.tags || [],
+        main_image: data.coverImage || "",
         description: "",
         canonical_url: "",
         series: "",
         organization_id: "",
     }),
-    hashnode: (data) => ({
-        title: data.title,
-        markdown: data.content,
-        publication_id: "",
-        slug: "",
-        subtitle: "",
-        cover_image: data.coverImage,
-        tags: "",
-        series: "",
-        seo_title: "",
-        seo_description: "",
-        canonical_url: "",
-        disable_comments: false,
-        hide_from_feed: false,
-        draft: false,
-    }),
+    github: (data) => {
+        // Derive clean slug for default filename: e.g. "my-first-blog.md"
+        const slug = (data.title || "untitled")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+
+        return {
+            title: data.title || "",
+            content: data.content || "",
+            owner: "",
+            repo: "",
+            branch: "main",
+            filePath: `content/posts/${slug || "post"}.md`,
+            commitMessage: `feat(blog): publish post "${data.title || "Untitled"}"`,
+            customFields: [],
+        };
+    },
 };
+
+import { fetchSavedPublishConfigs } from "@/services/client/publish.client";
 
 export const useFormState = (data: UserBlogData) => {
     const store = useFormStore();
 
     React.useEffect(() => {
+        if (!data || !data._id) return;
         store.initialize(data);
-    }, [data]);
+
+        let isMounted = true;
+        fetchSavedPublishConfigs(data._id)
+            .then((configs) => {
+                if (isMounted && configs) {
+                    store.hydrateSavedConfigs(configs as Record<string, unknown>);
+                }
+            })
+            .catch((err) => console.error("Failed to load saved publish configs:", err));
+
+        return () => {
+            isMounted = false;
+        };
+    }, [data?._id]);
 
     const getForm = <P extends keyof PlatformFormStates>(platform: P): PlatformFormStates[P] => {
         return (store.forms[platform] || initialFormStateCreators[platform](data)) as PlatformFormStates[P];

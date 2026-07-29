@@ -57,7 +57,7 @@ export const BlogCard = ({ blog }: { blog: UserBlogData }) => {
 
         {blog.tags && blog.tags.length > 0 && (
           <div className="mb-4 flex flex-wrap gap-1.5">
-            {blog.tags.map((tag, i) => (
+            {blog.tags.slice(0, 3).map((tag, i) => (
               <span
                 key={i}
                 className="rounded-md border border-border/70 bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
@@ -65,6 +65,11 @@ export const BlogCard = ({ blog }: { blog: UserBlogData }) => {
                 {tag}
               </span>
             ))}
+            {blog.tags.length > 3 && (
+              <span className="rounded-md border border-border/70 bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                +{blog.tags.length - 3} more
+              </span>
+            )}
           </div>
         )}
       </CardContent>
